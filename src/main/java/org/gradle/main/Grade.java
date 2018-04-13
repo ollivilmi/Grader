@@ -1,13 +1,14 @@
 package org.gradle.main;
 
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Grade {
-    private TreeSet<Double> gradeTree;
+    private List<Double> gradeList;
     private int amount;
     
     /***
-     * For unique grading systems. Creates a TreeSet 
+     * For unique grading systems. Creates a List of 
      * all the possible grades from the minimum to maximum,
      * by using the interval set by the user.
      * 
@@ -18,20 +19,20 @@ public class Grade {
      */
     public Grade(double min, double max, double interval)
     {   
-        gradeTree = new TreeSet<>();
+        gradeList = new ArrayList<>();
         for (double i = min; i<=max; i+= interval)
-            gradeTree.add(i);
+            gradeList.add(i);
         
-        amount = gradeTree.size();
+        amount = gradeList.size();
     }
     
     /***
      * Get the list of possible grades
      * @return 
      */
-    public TreeSet<Double> getDistribution()
+    public List<Double> getDistribution()
     {
-        return gradeTree;
+        return gradeList;
     }
     
     /***
@@ -46,11 +47,11 @@ public class Grade {
     
     public double getMin()
     {
-        return gradeTree.first();
+        return gradeList.get(0);
     }
     
     public double getMax()
     {
-        return gradeTree.last();
+        return gradeList.get(amount-1);
     }
 }

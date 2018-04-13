@@ -4,7 +4,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 import org.gradle.main.Grade;
 
-public class GradeTest {
+public class Grade_Tests {
     @Test public void correctGradeThresholds() {
         Grade grade = new Grade(1,5, 0.25);
         assertEquals("There should be 17 thresholds for grades 1-5 with an interval of 0.25", 17, grade.getAmount(), 0.01);
