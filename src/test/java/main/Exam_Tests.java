@@ -2,9 +2,9 @@ package main;
 
 import java.util.TreeSet;
 import org.junit.Test;
-import org.gradle.main.Exam;
-import org.gradle.main.Grade;
-import org.gradle.main.Threshold;
+import org.classes.Exam;
+import org.classes.Grade;
+import org.classes.Threshold;
 import static org.junit.Assert.*;
 
 public class Exam_Tests {

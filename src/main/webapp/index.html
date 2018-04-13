@@ -1,14 +1,18 @@
 <html>
 <head>
-  <title>Web Demo</title>
+  <title>Testing grader classes</title>
 </head>
 <body>
-<p>Say <a href="hello">Hello</a></p> 
 
-<form method="post" action="hello">  
-  <h2>Name:</h2>
-  <input type="text" id="say-hello-text-input" name="name" />
-  <input type="submit" id="say-hello-button" value="Say Hello" />
+<form method="post" action="thresholds">  
+  <br>Min grade: <input type="number" step="0.1" name="minGrade" />
+  <br>Max grade: <input type="number" step="0.1" name="maxGrade" />
+  <br>Grade interval: <input type="number" step="0.1" name="intervalGrade" />
+  
+  <br>Min points for exam: <input type="number" step="0.1" name="minExam" />
+  <br>Max points for exam: <input type="number" step="0.1" name="maxExam" />
+  
+  <br>Submit: <input type="submit" />
 </form>
 </body>
 </html>

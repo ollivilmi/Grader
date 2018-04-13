@@ -1,9 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <html>
     <head>
-        <title>Hello Page</title>
+        <title>Response</title>
     </head>
     <body>
-        <h2>Hello, ${user}!</h2>
+        <p>Default thresholds for the exam: ${thresholds} </p>
     </body>
 </html>

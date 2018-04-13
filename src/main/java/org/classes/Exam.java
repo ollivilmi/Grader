@@ -1,4 +1,4 @@
-package org.gradle.main;
+package org.classes;
 
 import java.util.TreeSet;
 
@@ -20,7 +20,7 @@ public class Exam {
         // Threshold contains Points - Grade
         thresholds = new TreeSet<>();
         int j = 0;
-        for (double i = min; i<max; i += interval, j++)
+        for (double i = min; j<grade.getAmount(); i += interval, j++)
             thresholds.add(new Threshold(i, grade.getDistribution().get(j)));
     }
     

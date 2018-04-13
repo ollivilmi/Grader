@@ -1,4 +1,4 @@
-package org.gradle.main;
+package org.classes;
 
 public class Threshold implements Comparable<Threshold> {
     private double points, grade;
