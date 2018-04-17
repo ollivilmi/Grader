@@ -1,1 +1,1 @@
-web: java -jar build/server/jetty-runner.jar build/libs/Grader.war
+web: java -jar build/libs/Grader.jar

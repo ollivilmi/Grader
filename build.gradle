@@ -1,31 +1,32 @@
-plugins {
-	id 'war'
-}
-
-dependencies {
-    providedCompile 'javax.servlet:javax.servlet-api:3.1.0'
-    testCompile 'junit:junit:4.12'
-	compileOnly 'org.eclipse.jetty:jetty-runner:9.4.9.v20180320'
-}
-
-repositories {
-    jcenter()
-	mavenCentral()
-}
-
-//Include the jetty runner into the build/server folder
-task copyToLib(type: Copy) {
-    into "build/server"
-    from(configurations.compileOnly) {
-        include "jetty-runner*"
-        rename { String fileName ->
-"jetty-runner.jar"   
-        }
+buildscript {
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.0.1.RELEASE")
     }
 }
 
-//Add to task stage that Heroku to prepare deployment
-task stage {
-    dependsOn clean, war, copyToLib 
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'java'
+
+
+bootJar {
+    baseName = 'Grader'
 }
-war.mustRunAfter clean
+
+repositories {
+	jcenter()
+	mavenCentral()
+}
+
+dependencies {
+    testCompile 'junit:junit:4.12'
+	compileOnly 'org.eclipse.jetty:jetty-runner:9.4.9.v20180320'
+	compile('org.springframework.boot:spring-boot-starter-web')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+}
+
+task stage(dependsOn: ['build', 'clean'])
+build.mustRunAfter clean

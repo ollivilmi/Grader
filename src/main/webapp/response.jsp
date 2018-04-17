@@ -5,6 +5,8 @@
         <title>Response</title>
     </head>
     <body>
-        <p>Default thresholds for the exam: ${thresholds} </p>
+        <ul>
+        ${thresholds}
+        </ul>
     </body>
 </html>

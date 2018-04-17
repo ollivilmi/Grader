@@ -46,13 +46,4 @@ public class Grader {
             }
         }
     }
-    
-    public static void main(String[] args) {
-        Grader grader = new Grader(1, 5, 0.5, 10, 30);
-        System.out.println(grader.getExam());
-        grader.setByPercentage(3, 0.9);
-        System.out.println(grader.getExam());
-        grader.setByPercentage(3, 0.66);
-        System.out.println(grader.getExam());
-    }
 }
