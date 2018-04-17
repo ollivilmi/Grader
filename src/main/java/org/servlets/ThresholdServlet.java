@@ -33,7 +33,7 @@ public class ThresholdServlet extends HttpServlet {
         for (Threshold t : grader.getExam())
         {
             sb.append("<br>Points: ");
-            sb.append(t.getPoints());
+            sb.append(t.getPercentage());
             sb.append(" Grade: ");
             sb.append(t.getGrade());
         }
