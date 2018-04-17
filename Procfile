@@ -1,1 +1,1 @@
-java  -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/Grader.jar
+web: java  -Dserver.port=$PORT $JAVA_OPTS -jar build/libs/Grader.jar
