@@ -23,10 +23,9 @@ repositories {
 
 dependencies {
     testCompile 'junit:junit:4.12'
-	compileOnly 'org.eclipse.jetty:jetty-runner:9.4.9.v20180320'
 	compile('org.springframework.boot:spring-boot-starter-web')
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 
 task stage(dependsOn: ['build', 'clean'])
-build.mustRunAfter clean
+build.mustRunAfter clean 
