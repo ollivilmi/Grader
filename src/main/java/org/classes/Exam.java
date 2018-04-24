@@ -13,7 +13,11 @@ public class Exam {
         this.min = min;
         this.max = max;
         this.grade = grade;
-        
+        defaultThresholds();
+    }
+
+    private void defaultThresholds()
+    {
         // calculate standard interval for grade thresholds
         double interval = (max-min) / grade.getAmount();
         
