@@ -16,7 +16,6 @@ public class Threshold implements Comparable<Threshold> {
         this.grade = grade;
     }
     
-    
     @Override
     public int compareTo(Threshold t) {
         if (t.grade > this.grade)
@@ -29,16 +28,6 @@ public class Threshold implements Comparable<Threshold> {
     public double getPercentage()
     {
         return percentage;
-    }
-    
-    public void setPercentage(double percentage)
-    {
-        this.percentage = percentage;
-    }
-    
-    public void setPoints(double points)
-    {
-        this.points = points;
     }
         
     public double getPoints()

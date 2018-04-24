@@ -1,18 +1,27 @@
 <html>
 <head>
   <title>Testing grader classes</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  <script src="scripts.js"></script>
 </head>
 <body>
 
-<form method="post" action="/getThresholds">  
-  <br>Min grade: <input type="number" step="0.1" name="gradeMin" value=1 />
-  <br>Max grade: <input type="number" step="0.1" name="gradeMax" value=5 />
-  <br>Grade interval: <input type="number" step="0.25" name="gradeInterval" value=0.5 />
-  
-  <br>Min points for exam: <input type="number" step="0.1" name="examMin" value=10 />
-  <br>Max points for exam: <input type="number" step="0.1" name="examMax" value=30 />
-  
-  <br>Submit: <input type="submit" />
-</form>
+  <form id="getThresholds">  
+    <br>Min grade: <input type="number" step="0.5" id="gradeMin" value=1 />
+    <br>Max grade: <input type="number" step="0.5" id="gradeMax" value=5 />
+    <br>Grade interval: <input type="number" step="0.5" id="gradeInterval" value=0.5 />
+    
+    <br>Min points for exam: <input type="number" step="0.5" id="examMin" value=10 />
+    <br>Max points for exam: <input type="number" step="0.5" id="examMax" value=30 />
+    
+    <br><button>Submit</button>
+  </form>
+
+  <ul id="gradeTable" class="list-group"></ul>
 </body>
 </html>
