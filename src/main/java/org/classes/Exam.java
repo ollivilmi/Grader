@@ -1,35 +1,40 @@
 package org.classes;
 
-import java.util.TreeSet;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class Exam {
     private double min, max;
     private Grade grade;
-    private TreeSet<Threshold> thresholds;
+    private TreeMap<Double, Double> thresholds;
     
     public Exam(double min, double max, Grade grade)
     {
         this.min = min;
         this.max = max;
         this.grade = grade;
-        
+        defaultThresholds();
+    }
+
+    private void defaultThresholds()
+    {
         // calculate standard interval for grade thresholds
         double interval = (max-min) / grade.getAmount();
         
-        // Ordered TreeSet
-        // Threshold contains Points - Grade
-        thresholds = new TreeSet<>();
+        // Ordered TreeMap
+        // Threshold contains Grade - Points
+        thresholds = new TreeMap<>();
         int j = 0;
         for (double i = min; j<grade.getAmount(); i += interval, j++)
-            thresholds.add(new Threshold(i/max, i, grade.getDistribution().get(j)));
+            thresholds.put(grade.getDistribution().get(j), Math.round(i * 2) / 2.0);
     }
     
-    public TreeSet<Threshold> getThresholds()
+    public TreeMap<Double, Double> getThresholds()
     {
         return thresholds;
     }
     
-    public void setThresholds(TreeSet<Threshold> newThresholds)
+    public void setThresholds(TreeMap<Double, Double> newThresholds)
     {
         thresholds = newThresholds;
     }
@@ -53,8 +58,8 @@ public class Exam {
     public String toString()
     {
         StringBuilder sb = new StringBuilder();
-        for (Threshold t : thresholds)
-            sb.append(t);
+        for (Map.Entry<Double, Double> t : thresholds.entrySet())
+            sb.append(t.getKey()).append(" ").append(t.getValue());
         return sb.toString();
     }
 }
