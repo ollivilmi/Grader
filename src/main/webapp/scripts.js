@@ -15,7 +15,7 @@ $(document).ready(function() {
 				results += "<li class='list-group-item'>"
 				+"<h5>Grade: "+data[i].grade+"</h5>"
 				+"<p>Points: "+data[i].points+"</p>"
-				+"<p>Percentage of max points: "+data[i].percentage+"</p>"
+                +"<p>("+Math.round(data[i].percentage*100)+"% of max points)</p>" 
             }
             $('#gradeTable').html(results);
        });

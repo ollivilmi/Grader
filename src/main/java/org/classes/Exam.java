@@ -22,7 +22,7 @@ public class Exam {
         thresholds = new TreeMap<>();
         int j = 0;
         for (double i = min; j<grade.getAmount(); i += interval, j++)
-            thresholds.put(grade.getDistribution().get(j), i);
+            thresholds.put(grade.getDistribution().get(j), Math.round(i * 2) / 2.0);
     }
     
     public TreeMap<Double, Double> getThresholds()
