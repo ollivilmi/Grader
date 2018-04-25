@@ -15,6 +15,13 @@ public class Exam {
         this.grade = grade;
         defaultThresholds();
     }
+    
+    public void updateConfig(double min, double max)
+    {
+        this.min = min;
+        this.max = max;
+        defaultThresholds();
+    }
 
     private void defaultThresholds()
     {

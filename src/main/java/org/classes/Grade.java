@@ -3,9 +3,10 @@ package org.classes;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Grade {
-    private List<Double> gradeList;
-    private int amount;
+public class Grade implements Comparable<Grade> {
+    private final List<Double> gradeList;
+    private final int amount;
+    private final double min, max, interval;
     
     /***
      * For unique grading systems. Creates a List of 
@@ -19,6 +20,9 @@ public class Grade {
      */
     public Grade(double min, double max, double interval)
     {   
+        this.min = min;
+        this.max = max;
+        this.interval = interval;
         gradeList = new ArrayList<>();
         for (double i = min; i<=max; i+= interval)
             gradeList.add(i);
@@ -53,5 +57,13 @@ public class Grade {
     public double getMax()
     {
         return gradeList.get(amount-1);
+    }
+
+    @Override
+    public int compareTo(Grade comparison) {
+        if (this.max == comparison.max && this.min == comparison.min 
+                && this.interval == comparison.interval)
+            return 0;
+        else return -1;
     }
 }

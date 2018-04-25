@@ -31,8 +31,38 @@ public class GraderResources {
             @RequestParam(value="gradeInterval") double gradeInterval, @RequestParam(value="examMin") double examMin, 
             @RequestParam(value="examMax") double examMax) throws SQLException, IOException{
         
-            Grader grader = new Grader(gradeMin, gradeMax, gradeInterval, examMin, examMax);
+            Grader grader = (Grader) session.getAttribute("Grader");
+            if (grader != null)
+                grader.updateConfig(gradeMin, gradeMax, gradeInterval, examMin, examMax);
+            else
+            {
+            grader = new Grader(gradeMin, gradeMax, gradeInterval, examMin, examMax);
             session.setAttribute("Grader", grader);
+            }
+    }
+    
+    @RequestMapping("/setByPoints")
+    public List<Threshold> updateThresholdPoints(HttpSession session, @RequestParam(value="grade") 
+            double grade, @RequestParam(value="points") double points) {
+        Grader grader = (Grader) session.getAttribute("Grader");
+        if (grader != null)
+        {
+            grader.setByPoints(grade, points);
+            return grader.getThresholds();
+        }
+        else return null;
+    }
+    
+    @RequestMapping("/setByPercentage")
+    public List<Threshold> updateThresholdPercentage(HttpSession session, @RequestParam(value="grade") 
+            double grade, @RequestParam(value="percentage") double percentage) {
+        Grader grader = (Grader) session.getAttribute("Grader");
+        if (grader != null)
+        {
+            grader.setByPercentage(grade, percentage);
+            return grader.getThresholds();
+        }
+        else return null;
     }
     
 }
