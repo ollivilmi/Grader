@@ -16,6 +16,11 @@ public class Grader {
         this.maxPoints = maxPoints;
     }
     
+    /***
+     * Returns the TreeMap in a List<Threshold> format so that the
+     * REST API prints them as proper JSON objects
+     * @return 
+     */
     public List<Threshold> getThresholds()
     {
         List<Threshold> thresholds = new ArrayList<>();
@@ -29,18 +34,38 @@ public class Grader {
      * Sets the target grade to % of points received from the test.
      * (70% of points to get 3 for example)
      * 
-     * Checks higher & lower value in TreeSet to main order
-     * 
      * @param grade
      * @param percentage 
      */
     public void setByPercentage(double grade, double percentage)
     {
         double points = percentage * maxPoints, previousPoints = exam.getThresholds().floorKey(grade);
-        // Round to nearest 0.5 points
         points = Math.round(points * 2) / 2.0;
         exam.getThresholds().replace(grade, points);
-        
+    }
+    
+    // Change by points
+    public void setByPoints(double grade, double points)
+    {
+        double previousPoints = exam.getThresholds().floorKey(grade);
+        points = Math.round(points * 2) / 2.0;
+        setPoints(grade, points, previousPoints);
+    }
+    
+    /***
+     * When changing a single Threshold, check other Thresholds to maintain
+     * order by adjusting their points
+     * 
+     * @param grade
+     * @param points
+     * @param previousPoints 
+     */
+    public void setPoints(double grade, double points, double previousPoints)
+    {
+        exam.getThresholds().replace(grade, points);
+                
+        // If the points were increased, check the above grades and increase
+        // their points to the new threshold + 0.5
         if (points > previousPoints)
         {
             Map<Double,Double> higherGrades = exam.getThresholds().tailMap(grade);
@@ -53,6 +78,7 @@ public class Grader {
                 else if (t.getValue() > points)
                     break;
         }
+        // If the points were lower than before check the grades below
         else if (points < previousPoints)
         {
             Map<Double,Double> lowerGrades = exam.getThresholds().headMap(points);
@@ -65,10 +91,5 @@ public class Grader {
                 else if (t.getValue() < points)
                     break;
         }
-    }
-    
-    public void setByPoints(double grade, double points)
-    {
-        exam.getThresholds().replace(grade, points);
     }
 }

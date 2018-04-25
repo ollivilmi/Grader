@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GraderResources {
 
+    // Gets the grade thresholds currently in the Grader object
     @RequestMapping("/getThresholds")
     public List<Threshold> getThresholds(HttpSession session) {
         Grader grader = (Grader) session.getAttribute("Grader");
@@ -22,7 +23,8 @@ public class GraderResources {
             return grader.getThresholds();
         else return null;
     }
-    
+
+    // Creates a new Grader object in the session
     @RequestMapping(value="/updateSession") 
     public void updateSession(HttpServletRequest request, HttpSession session,HttpServletResponse response,
             @RequestParam(value="gradeMin") double gradeMin, @RequestParam(value="gradeMax") double gradeMax,
