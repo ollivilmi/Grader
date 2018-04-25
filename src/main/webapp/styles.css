@@ -29,6 +29,7 @@ html {
 }
 
 table {
+    width: auto;
     overflow-y: hidden;
     margin: 1em;
 }

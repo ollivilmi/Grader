@@ -20,14 +20,13 @@ $(document).ready(function() {
     {
        $.getJSON("/getThresholds", function(grades)
        {
-           let results = "<thead class='thead'>";
+        let results = "";
             for (let g of grades)
-                results += "<th scope='col'>"+g.grade+"</th>";  
-            results += "</thead><tbody id='indextable'>";
-
-            for (let g of grades)
-                results += "<td>Points: "+g.points+" ("+Math.round(g.percentage*100)+"%)</td>";
-
+            {
+                results += "<tr><th scope='row'>"+g.grade+"</th>"
+                +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"'/></td>"
+                +"<td><input type='number' step='0.5' class='percentage number' value='"+Math.round(g.percentage*100)+"'/>%</td></tr>";
+            }
             $('#gradeTable').html(results);
        });
        return false;
