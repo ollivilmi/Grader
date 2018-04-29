@@ -7,7 +7,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Exam {
-    private double min, max;
+    private double min, max, total;
     private int preset;
     private Grade grade;
     private TreeMap<Double, Double> thresholds;
@@ -18,6 +18,7 @@ public class Exam {
         this.max = max;
         this.grade = grade;
         this.preset = preset;
+        this.total = max-min;
         generateThresholds();
     }
     
@@ -26,18 +27,18 @@ public class Exam {
         this.min = min;
         this.max = max;
         this.preset = preset;
+        this.total = max-min;
         generateThresholds();
     }
 
     private void generateThresholds()
-    {
-        
+    {     
         // Ordered TreeMap
         // Threshold contains Grade - Points
         thresholds = new TreeMap<>();
-        double mean = (max+min)/2;
+        double mean = (total)/2;
                 
-        // preset: configuration selected in <select id="preset">
+        // preset: int value in <select id="preset"></select>
         switch (preset)
         {
             case 1:
@@ -45,7 +46,7 @@ public class Exam {
                 // equal
                 
                 // calculate standard interval for grade thresholds
-                double deviation = (max-min) / grade.getAmount();
+                double deviation = (total) / grade.getAmount();
                 
                 double g = min;
                 for (int i = 0; i<grade.getAmount(); g += deviation, i++)
@@ -54,7 +55,7 @@ public class Exam {
                 
             case 2:
                 // Uses a variance of max-min/4 for random gaussian distribution
-                double variance = (max-min)/4;
+                double variance = (total)/4;
                 Iterator iterator = randomGaussianDistribution(mean, variance).iterator();
                 thresholds.put(grade.getDistribution().get(0), min);    
                 
@@ -62,9 +63,17 @@ public class Exam {
                     thresholds.put(grade.getDistribution().get(i), (double) iterator.next());
                 break;
                 
+            // Easy exam - deviation exponentially increases towards higher grades
             case 3:
-                // Easy exam - deviation between grades increases towards higher grades
+                // Get N:th root = amount of grades total for exponential growth
+                // Value range = total points - 5% of total points
+                double growth = nthRoot(grade.getAmount(), (total)-(0.05*total));
+                thresholds.put(grade.getDistribution().get(0), min);
                 
+                // We receive growth value, which is used in the function:
+                // growth ^ x
+                for (int i = 1, n = grade.getAmount(); i<n; i++)
+                    thresholds.put(grade.getDistribution().get(i), roundToHalf(min+Math.pow(growth, i+1)));
                 break;
             case 4:
                 break;
@@ -75,6 +84,15 @@ public class Exam {
         }
     }
     
+    /***
+     * Randomizes values between the mean by using the variance value
+     * 
+     * For standard normal distribution, (max-min)/4 is used for variance.
+     * 
+     * @param mean
+     * @param variance
+     * @return 
+     */
     private TreeSet<Double> randomGaussianDistribution(Double mean, double variance)
     {
         double gaussian = 0;
@@ -93,6 +111,29 @@ public class Exam {
         return grades;
     }
     
+    /***
+     * Gets the n:th root for value x
+     * 
+     * @param n root
+     * @param x value
+     * @return n:th root
+     */
+    private double nthRoot(int n, double x) 
+    {
+        double x1 = x, x2 = x / n;
+        while (Math.abs(x1 - x2) > 0.001) 
+        {
+            x1 = x2;
+            x2 = ((n - 1.0) * x2 + x / Math.pow(x2, n - 1.0)) / n;
+        }
+        return x2;
+    }
+    
+    /***
+     * Rounds value to the nearest 0.5
+     * @param value to round
+     * @return rounded value
+     */
     private double roundToHalf(double value)
     {
         return Math.round(value * 2) / 2.0;
