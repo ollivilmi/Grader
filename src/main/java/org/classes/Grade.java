@@ -51,12 +51,17 @@ public class Grade implements Comparable<Grade> {
     
     public double getMin()
     {
-        return gradeList.get(0);
+        return min;
     }
     
     public double getMax()
     {
-        return gradeList.get(amount-1);
+        return max;
+    }
+    
+    public double getInterval()
+    {
+        return interval;
     }
 
     @Override

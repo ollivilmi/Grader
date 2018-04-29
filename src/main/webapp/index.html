@@ -14,7 +14,7 @@
     <div class="container">
 
       <div class="card blue-gradient">
-        <fieldset>
+        <fieldset id="config">
           Min grade: <input class="number" type="number" step="0.5" id="gradeMin" value=1 />
           Max grade: <input class="number" type="number" step="0.5" id="gradeMax" value=5 />
           Grade interval: <input class="number" type="number" step="0.5" id="gradeInterval" value=0.5 />
@@ -22,7 +22,15 @@
           Min points for exam: <input class="number" type="number" step="0.5" id="examMin" value=10 />
           Max points for exam: <input class="number" type="number" step="0.5" id="examMax" value=30 />
           
-          <button id="updateSession" class="btn btn-default bg-bluewhite">Update configuration</button>
+          Select preset
+          <select id="preset">
+            <option value=1>Equal spread</option>
+            <option value=2>Random gaussian distribution</option>
+            <!-- TODO INSERT VARIANCE BY USER FOR NORMAL DISTRIBUTION -->
+            <option value=3>Easy exam</option>
+            <option value=4>Medium exam</option>
+            <option value=5>Hard exam</option>
+          </select>
           <button id="getThresholds" class="btn btn-default bg-bluewhite">Get Thresholds</button>
         </fieldset>
       </div>

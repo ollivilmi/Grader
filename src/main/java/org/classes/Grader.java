@@ -9,22 +9,23 @@ public class Grader {
     private Exam exam;
     private double maxPoints;
     
-    public Grader(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints)
+    public Grader(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         this.grade = new Grade(minGrade, maxGrade, intervalGrade);
-        this.exam = new Exam(minPoints, maxPoints, grade);
+        this.exam = new Exam(minPoints, maxPoints, grade, preset);
         this.maxPoints = maxPoints;
     }
     
-    public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints)
+    public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         Grade newGrade = new Grade(minGrade, maxGrade, intervalGrade);
+        this.maxPoints = maxPoints;
         if (grade.compareTo(newGrade) == -1)
         {
             this.grade = newGrade;
-            this.exam = new Exam(minPoints, maxPoints, grade);
+            this.exam = new Exam(minPoints, maxPoints, grade, preset);
         }
-        else exam.updateConfig(minPoints, maxPoints);
+        else exam.updateConfig(minPoints, maxPoints, preset);
     }
     
     /***
@@ -83,7 +84,7 @@ public class Grader {
             Map<Double,Double> higherGrades = exam.getThresholds().tailMap(grade);
             for (Map.Entry<Double, Double> t : higherGrades.entrySet())
             {
-                if (t.getValue() < points)
+                if (t.getValue() <= points)
                 {
                     points += 0.5;
                     t.setValue(points);
@@ -98,7 +99,7 @@ public class Grader {
             int i = lowerGrades.entrySet().size();
             for (Map.Entry<Double, Double> t : lowerGrades.entrySet())
             {
-                if (t.getValue() > points)
+                if (t.getValue() >= points)
                 {
                     t.setValue(points-(i--*0.5));
                 }
@@ -106,5 +107,15 @@ public class Grader {
                     i--;
             }
         }
+    }
+    
+    public Exam getExam()
+    {
+        return exam;
+    }
+    
+    public Grade getGrade()
+    {
+        return grade;
     }
 }

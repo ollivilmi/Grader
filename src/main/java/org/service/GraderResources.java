@@ -29,16 +29,26 @@ public class GraderResources {
     public void updateSession(HttpServletRequest request, HttpSession session,HttpServletResponse response,
             @RequestParam(value="gradeMin") double gradeMin, @RequestParam(value="gradeMax") double gradeMax,
             @RequestParam(value="gradeInterval") double gradeInterval, @RequestParam(value="examMin") double examMin, 
-            @RequestParam(value="examMax") double examMax) throws SQLException, IOException{
+            @RequestParam(value="examMax") double examMax, @RequestParam(value="preset") int preset) throws SQLException, IOException{
         
             Grader grader = (Grader) session.getAttribute("Grader");
             if (grader != null)
-                grader.updateConfig(gradeMin, gradeMax, gradeInterval, examMin, examMax);
+                grader.updateConfig(gradeMin, gradeMax, gradeInterval, examMin, examMax, preset);
             else
             {
-            grader = new Grader(gradeMin, gradeMax, gradeInterval, examMin, examMax);
+            grader = new Grader(gradeMin, gradeMax, gradeInterval, examMin, examMax, preset);
             session.setAttribute("Grader", grader);
             }
+    }
+    
+    @RequestMapping(value="/loadSession")
+    public Grader loadSession(HttpServletRequest request, HttpSession session,HttpServletResponse response)
+            throws SQLException, IOException{
+        
+            Grader grader = (Grader) session.getAttribute("Grader");
+            if (grader != null)
+                return grader;
+            else return null;
     }
     
     @RequestMapping("/setByPoints")

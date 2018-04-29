@@ -1,13 +1,24 @@
 $(document).ready(function() {
 
+    $.getJSON("/loadSession", function(grader){
+        if (grader !== null)
+        {
+            $('#gradeMin').val(grader.grade.min);
+            $('#gradeMax').val(grader.grade.max);
+            $('#gradeInterval').val(grader.grade.interval);
+            $('#examMin').val(grader.exam.min);
+            $('#examMax').val(grader.exam.max);
+            $('#preset').val(grader.exam.preset);
+        }
+    });
+    
     updateSession();
-    updateThresholds("/getThresholds");
-
+    
     function updateSession()
     {
         let updateSession = "/updateSession?gradeMin="+$('#gradeMin').val()
         +"&gradeMax="+$('#gradeMax').val()+"&gradeInterval="+$('#gradeInterval').val()
-        +"&examMin="+$('#examMin').val()+"&examMax="+$('#examMax').val();
+        +"&examMin="+$('#examMin').val()+"&examMax="+$('#examMax').val()+"&preset="+$('#preset').val();
 
         $.getJSON(updateSession, function(data)
         {
@@ -15,22 +26,22 @@ $(document).ready(function() {
         return false;
     }
 
-    function updateThresholds(url)
+    function updateThresholds()
     {
-       $.getJSON(url, function(grades)
-       {
-        let results = "";
-            for (let g of grades)
-            {
-                results += "<tr><th scope='row'>"+g.grade+"</th>"
-                +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"'/></td>"
-                +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"'/>%</td></tr>";
-            }
-            $('#gradeTable').html(results);
-            updateListeners();
-       });
-       return false;
-    };
+        $.getJSON("/getThresholds", function(grades)
+        {
+            let results = "";
+                for (let g of grades)
+                {
+                    results += "<tr><th scope='row'>"+g.grade+"</th>"
+                    +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"'/></td>"
+                    +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"'/>%</td></tr>";
+                }
+                $('#gradeTable').html(results);
+                updateListeners();
+        });
+        return false;
+    }
     
     function updateListeners()
     {
@@ -47,6 +58,7 @@ $(document).ready(function() {
         });
     }
 
-    $('#getThresholds').click(updateThresholds("/getThresholds"));
-    $('#updateSession').click(updateSession);
+    $('#config').change(updateSession);
+    $('#getThresholds').click(updateThresholds);
+   
 });
