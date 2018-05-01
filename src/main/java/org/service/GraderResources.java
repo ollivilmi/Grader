@@ -41,6 +41,8 @@ public class GraderResources {
             }
     }
     
+    // If the opens site site again with a previous session active, load previous
+    // configurations
     @RequestMapping(value="/loadSession")
     public Grader loadSession(HttpServletRequest request, HttpSession session,HttpServletResponse response)
             throws SQLException, IOException{
@@ -51,6 +53,7 @@ public class GraderResources {
             else return null;
     }
     
+    // Set threshold points with Grader object
     @RequestMapping("/setByPoints")
     public List<Threshold> updateThresholdPoints(HttpSession session, @RequestParam(value="grade") 
             double grade, @RequestParam(value="points") double points) {
@@ -63,6 +66,7 @@ public class GraderResources {
         else return null;
     }
     
+    // Set threshold points by percentage, handled by Grader object
     @RequestMapping("/setByPercentage")
     public List<Threshold> updateThresholdPercentage(HttpSession session, @RequestParam(value="grade") 
             double grade, @RequestParam(value="percentage") double percentage) {

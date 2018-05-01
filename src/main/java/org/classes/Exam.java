@@ -36,7 +36,7 @@ public class Exam {
         // Ordered TreeMap
         // Threshold contains Grade - Points
         thresholds = new TreeMap<>();
-        double mean = (total)/2, growth;
+        double mean = (max+min)/2, growth;
                 
         // preset: int value in <select id="preset"></select>
         switch (preset)
@@ -60,7 +60,7 @@ public class Exam {
                     thresholds.put(grade.getDistribution().get(i), (double) iterator.next());
                 break;
                 
-            // Easy exam - deviation exponentially increases towards higher grades
+            // Easy exam - most thresholds near max points
             case 3:
                 // Get N:th root = amount of grades total for exponential growth
                 // Value range = total points - 5% of total points
@@ -72,10 +72,12 @@ public class Exam {
                 for (int i = 1, n = grade.getAmount(); i<n; i++)
                     thresholds.put(grade.getDistribution().get(i), roundToHalf(min+Math.pow(growth, i+1)));
                 break;
+            // Hard exam - most thresholds near min points
             case 4:
                 growth = nthRoot(grade.getAmount(), (total)-(0.05*total));
                 thresholds.put(grade.getDistribution().get(0), min);
                 
+                // Same principle as case 3 with reverse order (max - value)
                 for (int i = grade.getAmount()-1, j = 1; i>0; i--, j++)
                     thresholds.put(grade.getDistribution().get(j), roundToHalf(max-Math.pow(growth, i+1)));
                 break;
@@ -96,15 +98,15 @@ public class Exam {
         double gaussian = 0;
         TreeSet<Double> grades = new TreeSet<>();
         Random random = new Random();
+        System.out.println("Min: " + min);
 
         while (grades.size() < grade.getAmount()-1)
         {
-            gaussian = mean + random.nextGaussian() * variance;
-            gaussian = roundToHalf(gaussian);
+            gaussian = roundToHalf(mean + random.nextGaussian() * variance);
             if (gaussian > max*0.95)
-                gaussian = max*0.95;
-            if (gaussian > min)
-                grades.add(roundToHalf(gaussian));
+                grades.add(roundToHalf(max*0.95));
+            else if (gaussian > min)
+                grades.add(gaussian);
         }
         return grades;
     }
@@ -181,4 +183,9 @@ public class Exam {
         return sb.toString();
     }
     
+    public static void main(String[] args)
+    {
+        Grade grade = new Grade(1,5,0.5);
+        Exam exam = new Exam(10,30,grade,2);
+    }
 }
