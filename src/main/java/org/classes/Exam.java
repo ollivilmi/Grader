@@ -31,20 +31,17 @@ public class Exam {
         generateThresholds();
     }
 
-    private void generateThresholds()
+    public void generateThresholds()
     {     
         // Ordered TreeMap
         // Threshold contains Grade - Points
         thresholds = new TreeMap<>();
-        double mean = (total)/2;
+        double mean = (total)/2, growth;
                 
         // preset: int value in <select id="preset"></select>
         switch (preset)
         {
             case 1:
-                // Equal spread of grades where the deviation between grades is
-                // equal
-                
                 // calculate standard interval for grade thresholds
                 double deviation = (total) / grade.getAmount();
                 
@@ -67,7 +64,7 @@ public class Exam {
             case 3:
                 // Get N:th root = amount of grades total for exponential growth
                 // Value range = total points - 5% of total points
-                double growth = nthRoot(grade.getAmount(), (total)-(0.05*total));
+                growth = nthRoot(grade.getAmount(), (total)-(0.05*total));
                 thresholds.put(grade.getDistribution().get(0), min);
                 
                 // We receive growth value, which is used in the function:
@@ -76,10 +73,11 @@ public class Exam {
                     thresholds.put(grade.getDistribution().get(i), roundToHalf(min+Math.pow(growth, i+1)));
                 break;
             case 4:
-                break;
-            case 5:
-                break;
-            case 6:
+                growth = nthRoot(grade.getAmount(), (total)-(0.05*total));
+                thresholds.put(grade.getDistribution().get(0), min);
+                
+                for (int i = grade.getAmount()-1, j = 1; i>0; i--, j++)
+                    thresholds.put(grade.getDistribution().get(j), roundToHalf(max-Math.pow(growth, i+1)));
                 break;
         }
     }
@@ -182,4 +180,5 @@ public class Exam {
             sb.append(t.getKey()).append(" ").append(t.getValue());
         return sb.toString();
     }
+    
 }

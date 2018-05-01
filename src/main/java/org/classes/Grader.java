@@ -36,6 +36,7 @@ public class Grader {
     public List<Threshold> getThresholds()
     {
         List<Threshold> thresholds = new ArrayList<>();
+        exam.generateThresholds();
         
         for (Map.Entry<Double, Double> t : exam.getThresholds().entrySet())
             thresholds.add(new Threshold(t.getValue()/maxPoints, t.getValue(), t.getKey()));
