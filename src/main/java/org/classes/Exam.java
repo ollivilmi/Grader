@@ -182,10 +182,4 @@ public class Exam {
             sb.append(t.getKey()).append(" ").append(t.getValue());
         return sb.toString();
     }
-    
-    public static void main(String[] args)
-    {
-        Grade grade = new Grade(1,5,0.5);
-        Exam exam = new Exam(10,30,grade,2);
-    }
 }

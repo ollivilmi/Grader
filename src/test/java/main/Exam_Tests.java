@@ -42,6 +42,13 @@ public class Exam_Tests {
         Exam exam1 = new Exam(10,30,grade,1);
         Exam exam2 = new Exam(10,30,grade,1);
         assertEquals(exam1.getThresholds(), exam2.getThresholds());
+        
+        exam1.updateConfig(10, 50, 3);
+        assertTrue(exam1.getThresholds() != exam2.getThresholds());
+        exam2.updateConfig(10, 50, 3);
+        assertEquals(exam1.getThresholds(), exam2.getThresholds());
+        exam1.updateConfig(10, 50, 2);
+        assertTrue(exam1.getThresholds() != exam2.getThresholds());
     }
     
     @Test public void multipleTimesAndValues() {
@@ -51,4 +58,5 @@ public class Exam_Tests {
             assertNotNull(new Exam(i,j,grade,2));
         }
     }
+
 }
