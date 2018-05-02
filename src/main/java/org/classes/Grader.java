@@ -3,17 +3,20 @@ package org.classes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Grader {
     private Grade grade;
     private Exam exam;
     private double maxPoints;
+    private TreeMap<Integer, Student> students;
     
     public Grader(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         this.grade = new Grade(minGrade, maxGrade, intervalGrade);
         this.exam = new Exam(minPoints, maxPoints, grade, preset);
         this.maxPoints = maxPoints;
+        this.students = new TreeMap<>();
     }
     
     public Grader(Grade grade, Exam exam)
@@ -21,6 +24,7 @@ public class Grader {
         this.grade = grade;
         this.exam = exam;
         this.maxPoints = exam.getMax();
+        this.students = new TreeMap<>();
     }
     
     public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
@@ -33,6 +37,30 @@ public class Grader {
             this.exam = new Exam(minPoints, maxPoints, grade, preset);
         }
         else exam.updateConfig(minPoints, maxPoints, preset);
+    }
+    
+    public void addStudent(int id, String name)
+    {
+        Student student = new Student(id, name);
+        students.put(id, student);
+    }
+    
+    public void addResult(int id, double result)
+    {
+        students.get(id).addResult(exam, result);
+    }
+    
+    public ArrayList<Student> getExamResults()
+    {
+        ArrayList<Student> results = new ArrayList<>();
+        
+        for (Map.Entry<Integer,Student> entry : students.entrySet())
+        {
+            Student student = entry.getValue();
+            student.setPoints(student.getResult(exam));
+            results.add(student);
+        }
+        return results;
     }
     
     /***

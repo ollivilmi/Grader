@@ -58,7 +58,29 @@ $(document).ready(function() {
         });
     }
 
+    function addStudent()
+    {
+        $.getJSON("/addStudent?studentId="+$('#studentId').val()+"&studentName="+$('#studentName').val(), function(success)
+        {
+        });
+    }
+
+    function getResults()
+    {
+        $.getJSON("/getResults", function(students)
+        {
+            let results = "";
+            for (let student of students)
+            {
+                results += '<li>Name: '+student.name+' Id: '+student.id
+                +' Points: <input type="number" step="0.5" class="points number" value="'+student.points+'" /></li>';
+            }
+            $('#results').html(results);
+        });
+    }
+
     $('#config').change(updateSession);
     $('#getThresholds').click(updateThresholds);
-   
+    $('#addStudent').click(addStudent);
+    $('#getResults').click(getResults);
 });

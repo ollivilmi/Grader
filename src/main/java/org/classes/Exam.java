@@ -98,7 +98,6 @@ public class Exam {
         double gaussian = 0;
         TreeSet<Double> grades = new TreeSet<>();
         Random random = new Random();
-        System.out.println("Min: " + min);
 
         while (grades.size() < grade.getAmount()-1)
         {
