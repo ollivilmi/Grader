@@ -54,9 +54,8 @@ public class Exam_Tests {
     @Test public void multipleTimesAndValues() {
         Grade grade = new Grade(4,10,0.5);
         for (int i = 10, j = 50; i < 500; i+=20, j+=20)
-        {
-            assertNotNull(new Exam(i,j,grade,2));
-        }
+            for (int k = 1; k<5; k++)
+                assertNotNull(new Exam(i,j,grade,2));
     }
 
 }

@@ -16,6 +16,13 @@ public class Grader {
         this.maxPoints = maxPoints;
     }
     
+    public Grader(Grade grade, Exam exam)
+    {
+        this.grade = grade;
+        this.exam = exam;
+        this.maxPoints = exam.getMax();
+    }
+    
     public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         Grade newGrade = new Grade(minGrade, maxGrade, intervalGrade);
