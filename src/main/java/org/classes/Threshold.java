@@ -3,6 +3,12 @@ package org.classes;
 public class Threshold implements Comparable<Threshold> {
     private double grade, percentage, points;
     
+    /***
+     * Class used for Spring REST API to build JSON automatically
+     * @param percentage % of total points
+     * @param points points for Grade
+     * @param grade grade for the amount of points
+     */
     public Threshold(double percentage, double points, double grade)
     {
         this.points = points;
@@ -38,18 +44,5 @@ public class Threshold implements Comparable<Threshold> {
     public double getGrade()
     {
         return grade;
-    }
-    
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        sb.append("Grade: ");
-        sb.append(grade);
-        sb.append(" Percentage: ");
-        sb.append(percentage);
-        sb.append(" Points: ");
-        sb.append(points);
-        return sb.toString();
     }
 }

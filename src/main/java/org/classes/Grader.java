@@ -9,16 +9,41 @@ public class Grader {
     private Exam exam;
     private double maxPoints;
     
-    public Grader(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints)
+    public Grader(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         this.grade = new Grade(minGrade, maxGrade, intervalGrade);
-        this.exam = new Exam(minPoints, maxPoints, grade);
+        this.exam = new Exam(minPoints, maxPoints, grade, preset);
         this.maxPoints = maxPoints;
     }
     
+    public Grader(Grade grade, Exam exam)
+    {
+        this.grade = grade;
+        this.exam = exam;
+        this.maxPoints = exam.getMax();
+    }
+    
+    public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
+    {
+        Grade newGrade = new Grade(minGrade, maxGrade, intervalGrade);
+        this.maxPoints = maxPoints;
+        if (grade.compareTo(newGrade) == -1)
+        {
+            this.grade = newGrade;
+            this.exam = new Exam(minPoints, maxPoints, grade, preset);
+        }
+        else exam.updateConfig(minPoints, maxPoints, preset);
+    }
+    
+    /***
+     * Returns the TreeMap in a List<Threshold> format so that the
+     * REST API prints them as proper JSON objects
+     * @return 
+     */
     public List<Threshold> getThresholds()
     {
         List<Threshold> thresholds = new ArrayList<>();
+        exam.generateThresholds();
         
         for (Map.Entry<Double, Double> t : exam.getThresholds().entrySet())
             thresholds.add(new Threshold(t.getValue()/maxPoints, t.getValue(), t.getKey()));
@@ -29,46 +54,76 @@ public class Grader {
      * Sets the target grade to % of points received from the test.
      * (70% of points to get 3 for example)
      * 
-     * Checks higher & lower value in TreeSet to main order
-     * 
      * @param grade
      * @param percentage 
      */
     public void setByPercentage(double grade, double percentage)
     {
-        double points = percentage * maxPoints, previousPoints = exam.getThresholds().floorKey(grade);
-        // Round to nearest 0.5 points
+        double points = percentage/100 * maxPoints, 
+        previousPoints = exam.getThresholds().ceilingEntry(grade).getValue();
         points = Math.round(points * 2) / 2.0;
+        setPoints(grade, points, previousPoints);
+    }
+    
+    // Change by points
+    public void setByPoints(double grade, double points)
+    {
+        double previousPoints = exam.getThresholds().ceilingEntry(grade).getValue();
+        points = Math.round(points * 2) / 2.0;
+        setPoints(grade, points, previousPoints);
+    }
+    
+    /***
+     * When changing a single Threshold, check other Thresholds to maintain
+     * order by adjusting their points
+     * 
+     * @param grade
+     * @param points
+     * @param previousPoints 
+     */
+    public void setPoints(double grade, double points, double previousPoints)
+    {
         exam.getThresholds().replace(grade, points);
-        
+                
+        // If the points were increased, check the above grades and increase
+        // their points to the new threshold + 0.5
         if (points > previousPoints)
         {
             Map<Double,Double> higherGrades = exam.getThresholds().tailMap(grade);
             for (Map.Entry<Double, Double> t : higherGrades.entrySet())
-                if (t.getValue() < points)
+            {
+                if (t.getValue() <= points)
                 {
                     points += 0.5;
                     t.setValue(points);
                 }
-                else if (t.getValue() > points)
-                    break;
+            }
         }
+        // If the points were lower than before check the grades below
         else if (points < previousPoints)
         {
-            Map<Double,Double> lowerGrades = exam.getThresholds().headMap(points);
+            Map<Double,Double> lowerGrades = exam.getThresholds().headMap(grade);
+            // Amount of elements left to iterate
+            int i = lowerGrades.entrySet().size();
             for (Map.Entry<Double, Double> t : lowerGrades.entrySet())
-                if (t.getValue() > points)
+            {
+                if (t.getValue() >= points)
                 {
-                    points -= 0.5;
-                    t.setValue(points);
+                    t.setValue(points-(i--*0.5));
                 }
-                else if (t.getValue() < points)
-                    break;
+                else
+                    i--;
+            }
         }
     }
     
-    public void setByPoints(double grade, double points)
+    public Exam getExam()
     {
-        exam.getThresholds().replace(grade, points);
+        return exam;
+    }
+    
+    public Grade getGrade()
+    {
+        return grade;
     }
 }
