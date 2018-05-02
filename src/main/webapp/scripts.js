@@ -56,6 +56,8 @@ $(document).ready(function() {
             let url = "/setByPercentage?grade="+this.parentNode.previousSibling.previousSibling.innerHTML+"&percentage="+this.value;
             updateThresholds(url);
         });
+
+        $('.studentResults')
     }
 
     function addStudent()
@@ -73,7 +75,8 @@ $(document).ready(function() {
             for (let student of students)
             {
                 results += '<li>Name: '+student.name+' Id: '+student.id
-                +' Points: <input type="number" step="0.5" class="points number" value="'+student.points+'" /></li>';
+                +' Points: <input type="number" step="0.5" class="studentResults number" value="'+student.points+'" />'
+                +' Grade: '+student.grade+'</li>';
             }
             $('#results').html(results);
         });

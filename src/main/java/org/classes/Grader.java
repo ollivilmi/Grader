@@ -53,11 +53,22 @@ public class Grader {
     public ArrayList<Student> getExamResults()
     {
         ArrayList<Student> results = new ArrayList<>();
+        TreeMap<Double, Double> thresholds = exam.getReverseMap();
         
         for (Map.Entry<Integer,Student> entry : students.entrySet())
         {
             Student student = entry.getValue();
-            student.setPoints(student.getResult(exam));
+            Double points = student.getResult(exam), result;
+            
+            try {
+                result = thresholds.floorEntry(points).getValue();
+            }
+            catch (NullPointerException e)
+            {
+                result = 0.0;
+            }
+            
+            student.setResult(points, result);
             results.add(student);
         }
         return results;

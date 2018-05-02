@@ -105,4 +105,13 @@ public class GraderResources {
         if (grader != null)
             grader.addStudent(studentId, studentName);
     }
+    
+    @RequestMapping("/addResult")
+    public void addResult(HttpSession session, @RequestParam(value="studentId")
+    int studentId, @RequestParam(value="studentResult") double studentResult)
+    {
+        Grader grader = (Grader) session.getAttribute("Grader");
+        if (grader != null)
+            grader.addResult(studentId, studentResult);
+    }
 }

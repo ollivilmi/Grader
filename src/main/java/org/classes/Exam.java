@@ -143,6 +143,14 @@ public class Exam {
         return thresholds;
     }
     
+    public TreeMap<Double, Double> getReverseMap()
+    {
+        TreeMap<Double,Double> reverse = new TreeMap<>();
+        for (Map.Entry<Double,Double> e : thresholds.entrySet())
+            reverse.put(e.getValue(), e.getKey());
+        return reverse;
+    }
+    
     public void setThresholds(TreeMap<Double, Double> newThresholds)
     {
         thresholds = newThresholds;

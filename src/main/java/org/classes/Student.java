@@ -6,7 +6,7 @@ public class Student {
     
     private int id;
     private String name;
-    private double points;
+    private double points, grade;
     private HashMap<Exam, Double> pointsByExam;
     
     public Student(int id, String name)
@@ -32,9 +32,15 @@ public class Student {
         return points;
     }
     
-    public void setPoints(double value)
+    public double getGrade()
     {
-        this.points = value;
+        return grade;
+    }
+    
+    public void setResult(double points, double grade)
+    {
+        this.points = points;
+        this.grade = grade;
     }
     
     public void addResult(Exam exam, double points)
