@@ -7,13 +7,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Exam {
-<<<<<<< HEAD
     private double min, max, total;
     private int preset;
-=======
-    //test commit bla bla
-    private double min, max;
->>>>>>> test
     private Grade grade;
     private TreeMap<Double, Double> thresholds;
     
