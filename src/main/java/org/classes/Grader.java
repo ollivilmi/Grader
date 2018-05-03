@@ -3,17 +3,20 @@ package org.classes;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 public class Grader {
     private Grade grade;
     private Exam exam;
     private double maxPoints;
+    private TreeMap<Integer, Student> students;
     
     public Grader(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         this.grade = new Grade(minGrade, maxGrade, intervalGrade);
         this.exam = new Exam(minPoints, maxPoints, grade, preset);
         this.maxPoints = maxPoints;
+        this.students = new TreeMap<>();
     }
     
     public Grader(Grade grade, Exam exam)
@@ -21,6 +24,7 @@ public class Grader {
         this.grade = grade;
         this.exam = exam;
         this.maxPoints = exam.getMax();
+        this.students = new TreeMap<>();
     }
     
     public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
@@ -35,6 +39,41 @@ public class Grader {
         else exam.updateConfig(minPoints, maxPoints, preset);
     }
     
+    public void addStudent(int id, String name)
+    {
+        Student student = new Student(id, name);
+        students.put(id, student);
+    }
+    
+    public void addResult(int id, double result)
+    {
+        students.get(id).addResult(exam, result);
+    }
+    
+    public ArrayList<Student> getExamResults()
+    {
+        ArrayList<Student> results = new ArrayList<>();
+        TreeMap<Double, Double> thresholds = exam.getReverseMap();
+        
+        for (Map.Entry<Integer,Student> entry : students.entrySet())
+        {
+            Student student = entry.getValue();
+            Double points = student.getResult(exam), result;
+            
+            try {
+                result = thresholds.floorEntry(points).getValue();
+            }
+            catch (NullPointerException e)
+            {
+                result = 0.0;
+            }
+            
+            student.setResult(points, result);
+            results.add(student);
+        }
+        return results;
+    }
+    
     /***
      * Returns the TreeMap in a List<Threshold> format so that the
      * REST API prints them as proper JSON objects
@@ -43,7 +82,6 @@ public class Grader {
     public List<Threshold> getThresholds()
     {
         List<Threshold> thresholds = new ArrayList<>();
-        exam.generateThresholds();
         
         for (Map.Entry<Double, Double> t : exam.getThresholds().entrySet())
             thresholds.add(new Threshold(t.getValue()/maxPoints, t.getValue(), t.getKey()));
@@ -62,7 +100,7 @@ public class Grader {
         double points = percentage/100 * maxPoints, 
         previousPoints = exam.getThresholds().ceilingEntry(grade).getValue();
         points = Math.round(points * 2) / 2.0;
-        setPoints(grade, points, previousPoints);
+        exam.setThreshold(grade, points, previousPoints);
     }
     
     // Change by points
@@ -70,51 +108,7 @@ public class Grader {
     {
         double previousPoints = exam.getThresholds().ceilingEntry(grade).getValue();
         points = Math.round(points * 2) / 2.0;
-        setPoints(grade, points, previousPoints);
-    }
-    
-    /***
-     * When changing a single Threshold, check other Thresholds to maintain
-     * order by adjusting their points
-     * 
-     * @param grade
-     * @param points
-     * @param previousPoints 
-     */
-    public void setPoints(double grade, double points, double previousPoints)
-    {
-        exam.getThresholds().replace(grade, points);
-                
-        // If the points were increased, check the above grades and increase
-        // their points to the new threshold + 0.5
-        if (points > previousPoints)
-        {
-            Map<Double,Double> higherGrades = exam.getThresholds().tailMap(grade);
-            for (Map.Entry<Double, Double> t : higherGrades.entrySet())
-            {
-                if (t.getValue() <= points)
-                {
-                    points += 0.5;
-                    t.setValue(points);
-                }
-            }
-        }
-        // If the points were lower than before check the grades below
-        else if (points < previousPoints)
-        {
-            Map<Double,Double> lowerGrades = exam.getThresholds().headMap(grade);
-            // Amount of elements left to iterate
-            int i = lowerGrades.entrySet().size();
-            for (Map.Entry<Double, Double> t : lowerGrades.entrySet())
-            {
-                if (t.getValue() >= points)
-                {
-                    t.setValue(points-(i--*0.5));
-                }
-                else
-                    i--;
-            }
-        }
+        exam.setThreshold(grade, points, previousPoints);
     }
     
     public Exam getExam()

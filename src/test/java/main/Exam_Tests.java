@@ -57,5 +57,17 @@ public class Exam_Tests {
             for (int k = 1; k<5; k++)
                 assertNotNull(new Exam(i,j,grade,2));
     }
-
+    
+    @Test public void reverseMap() 
+    {
+        Grade grade = new Grade(1,5,0.5);
+        Exam exam = new Exam(40,80,grade,1);
+        for (int i = 10, j = 50; i < 500; i+=20, j+=20)
+            for (int k = 1; k<5; k++)
+            {
+                exam.updateConfig(i, j, k);
+                assertEquals(exam.getReverseMap().lastKey(), exam.getThresholds().lastEntry().getValue());
+                assertEquals(exam.getReverseMap().firstKey(), exam.getThresholds().firstEntry().getValue());
+            }
+    }
 }
