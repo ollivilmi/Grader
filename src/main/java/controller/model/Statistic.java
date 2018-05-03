@@ -1,7 +1,6 @@
 package controller.model;
 
 import controller.component.Student;
-import controller.component.Student;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;

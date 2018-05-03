@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import javafx.util.Pair;
+import org.apache.commons.math3.util.Pair;
 
 public class Grader {
     private Grade grade;
@@ -54,11 +54,6 @@ public class Grader {
     public void addResult(int id, double result)
     {
         students.get(id).addResult(exam, result);
-    }
-    
-    public void getExamStatistics() {
-        double mean, deviation, median;
-        
     }
     
     public Pair<List<Student>,Statistic> getExamResults()
