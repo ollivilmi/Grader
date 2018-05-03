@@ -18,5 +18,7 @@ public class Grade_Tests {
         Grade grade = new Grade(1,100, 0.5);
         assertEquals("The min grade should be 1", 1, grade.getMin(), 0.01);
         assertEquals("The max grade should be 100", 100, grade.getMax(), 0.01);
+        assertNotEquals("The max grade is 100", 99, grade.getMax(), 0.01);
+        assertNotEquals("The min grade is 1", 2, grade.getMin(), 0.01);
     }
 }
