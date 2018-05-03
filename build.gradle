@@ -25,6 +25,7 @@ dependencies {
     testCompile 'junit:junit:4.12'
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile 'org.springframework.session:spring-session-core:2.0.2.RELEASE'
+	compile group: 'org.apache.commons', name: 'commons-math3', version: '3.0'
     testCompile('org.springframework.boot:spring-boot-starter-test')
 }
 

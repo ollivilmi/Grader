@@ -1,5 +1,7 @@
 $(document).ready(function() {
 
+    // Loads exam configuration information from Session
+    // if it exists
     $.getJSON("/loadSession", function(grader){
         if (grader !== null)
         {
@@ -10,10 +12,10 @@ $(document).ready(function() {
             $('#examMax').val(grader.exam.max);
             $('#preset').val(grader.exam.preset);
         }
-    });
+    }).always(updateConfig);
     
-    updateConfig();
-    
+    // Updates the current configuration to create/update Exam
+    // - Then calls Grader to display Thresholds
     function updateConfig()
     {
         let updateSession = "/updateSession?gradeMin="+$('#gradeMin').val()
@@ -24,10 +26,19 @@ $(document).ready(function() {
         return false;
     }
 
+    // Updates the Thresholds of Points - Grade
+    // (Calls Grader's setByPoint() function)
+    // ---
+    // Updates the point inputs listeners for each
+    // threshold so that they respond to the user's changes
+    // ---
+    // Updates the exam results, in the case that the grades
+    // changed when the thresholds were adjusted
     function updateThresholds(url)
     {
         $.getJSON(url, function(grades)
         {
+            console.log(grades);
             let results = "";
                 for (let g of grades)
                 {
@@ -41,6 +52,9 @@ $(document).ready(function() {
         return false;
     }
     
+    // (See function above)
+    // When user inputs a change to a Threshold
+    // changes it in the Grader object
     function updateListeners()
     {
         $('.points').change(function()
@@ -56,6 +70,8 @@ $(document).ready(function() {
         });
     }
 
+    // Adds a student to the session, then updates the table
+    // of students
     function addStudent()
     {
         $.getJSON("/addStudent?studentId="+$('#studentId').val()+"&studentName="+$('#studentName').val())
@@ -63,12 +79,17 @@ $(document).ready(function() {
         return false;
     }
 
+    // Gets all students and statistics from their results
     function getResults()
     {
-        $.getJSON("/getResults", function(students)
+        $.getJSON("/getResults", function(stats)
         {
             let results = "";
-            for (let student of students)
+            let points = [];
+
+            // Builds a table of students
+            // Student ID - Name - Points - Grade
+            for (let student of stats.key)
             {
                 results += '<tr><td>'+student.id+'</td>'
                 +'<td>'+student.name+'</td>'
@@ -76,7 +97,25 @@ $(document).ready(function() {
                 +'<td>'+student.grade+'</td></tr>';
             }
             $('#results').html(results);
+
+            // Builds a table of statistics
+            // Mean - Median - Deviation
+
+            // Table row - Points
+            results = "<tr><td>Points</td>";
+            for (let stat of stats.value.points)
+                results += '<td>'+Math.round(stat.value*100)/100+'</td>';
+            results += '</tr><tr><td>Grades</td>';
+
+            // Table row - Grades
+            for (let stat of stats.value.grades)
+                results += '<td>'+Math.round(stat.value*100)/100+'</td>';
+                results += '</td>';
+            $('#statistics').html(results);
         })
+        // After generating a table of students, handle user inputs
+        // for changing Student information
+
         .always(function() {
             $('.studentResults').change(function() {
                 let url = "/addResult?studentId="+this.parentNode.previousSibling.previousSibling.innerHTML+'&studentResult='+this.value;
@@ -86,7 +125,12 @@ $(document).ready(function() {
         return false;
     }
 
+    // Creates a new Exam object with the configurations the user has set
+    // - Creates new grade Thresholds from the settings
     $('#getThresholds').click(updateConfig);
+
+    // User adds a student to the current session
+    // - Adds student
+    // - Refreshes student results
     $('#addStudent').click(addStudent);
-    $('#getResults').click(getResults);
 });

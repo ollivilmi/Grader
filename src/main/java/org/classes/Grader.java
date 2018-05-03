@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import javafx.util.Pair;
 
 public class Grader {
     private Grade grade;
@@ -50,7 +51,12 @@ public class Grader {
         students.get(id).addResult(exam, result);
     }
     
-    public ArrayList<Student> getExamResults()
+    public void getExamStatistics() {
+        double mean, deviation, median;
+        
+    }
+    
+    public Pair<List<Student>,Statistics> getExamResults()
     {
         ArrayList<Student> results = new ArrayList<>();
         TreeMap<Double, Double> thresholds = exam.getReverseMap();
@@ -71,7 +77,7 @@ public class Grader {
             student.setResult(points, result);
             results.add(student);
         }
-        return results;
+        return new Pair(results, new Statistics(results));
     }
     
     /***
