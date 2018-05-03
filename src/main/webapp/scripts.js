@@ -12,17 +12,15 @@ $(document).ready(function() {
         }
     });
     
-    updateSession();
+    updateConfig();
     
-    function updateSession()
+    function updateConfig()
     {
         let updateSession = "/updateSession?gradeMin="+$('#gradeMin').val()
         +"&gradeMax="+$('#gradeMax').val()+"&gradeInterval="+$('#gradeInterval').val()
         +"&examMin="+$('#examMin').val()+"&examMax="+$('#examMax').val()+"&preset="+$('#preset').val();
 
-        $.getJSON(updateSession, function(data)
-        {
-        });
+        $.getJSON(updateSession).always(updateThresholds("/getThresholds"));
         return false;
     }
 
@@ -39,7 +37,7 @@ $(document).ready(function() {
                 }
                 $('#gradeTable').html(results);
                 updateListeners();
-        });
+        }).always(getResults);
         return false;
     }
     
@@ -56,16 +54,12 @@ $(document).ready(function() {
             let url = "/setByPercentage?grade="+this.parentNode.previousSibling.previousSibling.innerHTML+"&percentage="+this.value;
             updateThresholds(url);
         });
-
-        $('.studentResults')
     }
 
     function addStudent()
     {
-        $.getJSON("/addStudent?studentId="+$('#studentId').val()+"&studentName="+$('#studentName').val(), function(success)
-        {
-        });
-        getResults();
+        $.getJSON("/addStudent?studentId="+$('#studentId').val()+"&studentName="+$('#studentName').val())
+        .always(getResults);
         return false;
     }
 
@@ -82,15 +76,17 @@ $(document).ready(function() {
                 +'<td>'+student.grade+'</td></tr>';
             }
             $('#results').html(results);
+        })
+        .always(function() {
+            $('.studentResults').change(function() {
+                let url = "/addResult?studentId="+this.parentNode.previousSibling.previousSibling.innerHTML+'&studentResult='+this.value;
+                $.getJSON(url).always(getResults);
+            })
         });
         return false;
     }
 
-    $('#config').change(updateSession);
-    $('#getThresholds').click(function() {
-        updateSession();
-        updateThresholds("/getThresholds");
-    });
+    $('#getThresholds').click(updateConfig);
     $('#addStudent').click(addStudent);
     $('#getResults').click(getResults);
 });

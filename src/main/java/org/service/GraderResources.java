@@ -103,7 +103,9 @@ public class GraderResources {
     {
         Grader grader = (Grader) session.getAttribute("Grader");
         if (grader != null)
+        {
             grader.addStudent(studentId, studentName);
+        }
     }
     
     @RequestMapping("/addResult")

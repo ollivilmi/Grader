@@ -161,8 +161,11 @@ public class Exam {
      */
     public void setThreshold(double grade, double points, double previousPoints)
     {
+        if (points < min)
+            points = min;
+        else if (points > max)
+            points = max;
         thresholds.replace(grade, points);
-        System.out.println("grade: " + grade + "points: " + points);
         // If the points were increased, check the above grades and increase
         // their points to the new threshold + 0.5
         if (points > previousPoints)
