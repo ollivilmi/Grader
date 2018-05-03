@@ -18,7 +18,11 @@ public class Grader_Tests {
             assertTrue(previousValue < t.getValue());
             grader.setByPoints(t.getKey(), previousValue);
             assertTrue(previousValue == t.getValue());
-        }   
+        }  
+            grader.setByPoints(1.0, 15.0);
+            assertTrue(grader.getExam().getThresholds().get(1.0) == 15);
+            grader.setByPoints(1.0, 10.0);
+            assertTrue(grader.getExam().getThresholds().get(1.0) == 10);
     }
     
     @Test public void addStudents() {

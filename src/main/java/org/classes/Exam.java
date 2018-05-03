@@ -151,6 +151,52 @@ public class Exam {
         return reverse;
     }
     
+        /***
+     * When changing a single Threshold, check other Thresholds to maintain
+     * order by adjusting their points
+     * 
+     * @param grade
+     * @param points
+     * @param previousPoints 
+     */
+    public void setThreshold(double grade, double points, double previousPoints)
+    {
+        thresholds.replace(grade, points);
+        System.out.println("grade: " + grade + "points: " + points);
+        // If the points were increased, check the above grades and increase
+        // their points to the new threshold + 0.5
+        if (points > previousPoints)
+        {
+            Map<Double,Double> higherGrades = thresholds.tailMap(grade);
+            for (Map.Entry<Double, Double> t : higherGrades.entrySet())
+            {
+                if (t.getValue() <= points)
+                {
+                    t.setValue(points);
+                    if (points < max)
+                        points += 0.5;
+                }
+            }
+        }
+        // If the points were lower than before check the grades below
+        else if (points < previousPoints)
+        {
+            Map<Double,Double> lowerGrades = thresholds.headMap(grade);
+            // Amount of elements left to iterate
+            int i = lowerGrades.entrySet().size();
+            for (Map.Entry<Double, Double> t : lowerGrades.entrySet())
+            {
+                double newValue = points-(i--*0.5);
+                if (t.getValue() >= points)
+                {
+                    if (newValue < min)
+                        newValue = min;
+                    t.setValue(newValue);
+                }
+            }
+        }
+    }
+    
     public void setThresholds(TreeMap<Double, Double> newThresholds)
     {
         thresholds = newThresholds;

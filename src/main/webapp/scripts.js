@@ -26,9 +26,9 @@ $(document).ready(function() {
         return false;
     }
 
-    function updateThresholds()
+    function updateThresholds(url)
     {
-        $.getJSON("/getThresholds", function(grades)
+        $.getJSON(url, function(grades)
         {
             let results = "";
                 for (let g of grades)
@@ -65,6 +65,8 @@ $(document).ready(function() {
         $.getJSON("/addStudent?studentId="+$('#studentId').val()+"&studentName="+$('#studentName').val(), function(success)
         {
         });
+        getResults();
+        return false;
     }
 
     function getResults()
@@ -74,16 +76,21 @@ $(document).ready(function() {
             let results = "";
             for (let student of students)
             {
-                results += '<li>Name: '+student.name+' Id: '+student.id
-                +' Points: <input type="number" step="0.5" class="studentResults number" value="'+student.points+'" />'
-                +' Grade: '+student.grade+'</li>';
+                results += '<tr><td>'+student.id+'</td>'
+                +'<td>'+student.name+'</td>'
+                +'<td><input type="number" step="0.5" class="studentResults number" value="'+student.points+'" /></td>'
+                +'<td>'+student.grade+'</td></tr>';
             }
             $('#results').html(results);
         });
+        return false;
     }
 
     $('#config').change(updateSession);
-    $('#getThresholds').click(updateThresholds);
+    $('#getThresholds').click(function() {
+        updateSession();
+        updateThresholds("/getThresholds");
+    });
     $('#addStudent').click(addStudent);
     $('#getResults').click(getResults);
 });
