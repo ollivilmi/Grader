@@ -3,8 +3,8 @@ package main;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import org.junit.Test;
-import org.classes.Exam;
-import org.classes.Grade;
+import controller.component.Exam;
+import controller.component.Grade;
 import static org.junit.Assert.*;
 
 public class Exam_Tests {

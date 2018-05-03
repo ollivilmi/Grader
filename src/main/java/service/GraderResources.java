@@ -1,4 +1,4 @@
-package org.service;
+package service;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -7,10 +7,10 @@ import javafx.util.Pair;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import org.classes.Grader;
-import org.classes.Statistics;
-import org.classes.Student;
-import org.classes.Threshold;
+import controller.Grader;
+import controller.model.Statistic;
+import controller.component.Student;
+import controller.model.Threshold;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -89,7 +89,7 @@ public class GraderResources {
     
     // Get student results for current Exam
     @RequestMapping("/getResults")
-    public Pair<List<Student>,Statistics> getResults(HttpSession session) 
+    public Pair<List<Student>,Statistic> getResults(HttpSession session) 
     {
         Grader grader = (Grader) session.getAttribute("Grader");
         if (grader != null)

@@ -1,4 +1,4 @@
-package org.classes;
+package controller.model;
 
 public class Threshold implements Comparable<Threshold> {
     private double grade, percentage, points;

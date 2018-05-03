@@ -23,7 +23,6 @@ $(document).ready(function() {
         +"&examMin="+$('#examMin').val()+"&examMax="+$('#examMax').val()+"&preset="+$('#preset').val();
 
         $.getJSON(updateSession).always(updateThresholds("/getThresholds"));
-        return false;
     }
 
     // Updates the Thresholds of Points - Grade
@@ -38,7 +37,6 @@ $(document).ready(function() {
     {
         $.getJSON(url, function(grades)
         {
-            console.log(grades);
             let results = "";
                 for (let g of grades)
                 {
@@ -49,7 +47,6 @@ $(document).ready(function() {
                 $('#gradeTable').html(results);
                 updateListeners();
         }).always(getResults);
-        return false;
     }
     
     // (See function above)
@@ -104,12 +101,12 @@ $(document).ready(function() {
             // Table row - Points
             results = "<tr><td>Points</td>";
             for (let stat of stats.value.points)
-                results += '<td>'+Math.round(stat.value*100)/100+'</td>';
+                results += '<td>'+Math.round(stat*100)/100+'</td>';
             results += '</tr><tr><td>Grades</td>';
 
             // Table row - Grades
             for (let stat of stats.value.grades)
-                results += '<td>'+Math.round(stat.value*100)/100+'</td>';
+                results += '<td>'+Math.round(stat*100)/100+'</td>';
                 results += '</td>';
             $('#statistics').html(results);
         })

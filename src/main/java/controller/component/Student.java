@@ -1,5 +1,6 @@
-package org.classes;
+package controller.component;
 
+import controller.component.Exam;
 import java.util.HashMap;
 
 public class Student {

@@ -1,5 +1,10 @@
-package org.classes;
+package controller;
 
+import controller.model.Statistic;
+import controller.model.Threshold;
+import controller.component.Student;
+import controller.component.Grade;
+import controller.component.Exam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -56,7 +61,7 @@ public class Grader {
         
     }
     
-    public Pair<List<Student>,Statistics> getExamResults()
+    public Pair<List<Student>,Statistic> getExamResults()
     {
         ArrayList<Student> results = new ArrayList<>();
         TreeMap<Double, Double> thresholds = exam.getReverseMap();
@@ -77,7 +82,7 @@ public class Grader {
             student.setResult(points, result);
             results.add(student);
         }
-        return new Pair(results, new Statistics(results));
+        return new Pair(results, new Statistic(results));
     }
     
     /***

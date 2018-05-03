@@ -1,4 +1,4 @@
-package org.classes;
+package controller.component;
 
 import java.util.ArrayList;
 import java.util.List;

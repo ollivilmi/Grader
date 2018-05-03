@@ -1,4 +1,4 @@
-package org.classes;
+package controller.component;
 
 import java.util.Iterator;
 import java.util.Map;

@@ -1,16 +1,17 @@
-package org.classes;
+package controller.model;
 
+import controller.component.Student;
+import controller.component.Student;
 import java.util.ArrayList;
 import java.util.List;
-import javafx.util.Pair;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
 
-public class Statistics {
-    private List<Pair<String, Double>> pointStats, gradeStats;
+public class Statistic {
+    private List<Double> pointStats, gradeStats;
     
-    public Statistics (List<Student> students)
+    public Statistic (List<Student> students)
     {
         pointStats = new ArrayList<>();
         gradeStats = new ArrayList<>();
@@ -23,24 +24,24 @@ public class Statistics {
             points[i] = students.get(i).getPoints();
         }
         Mean mean = new Mean();
-        pointStats.add(new Pair("mean", mean.evaluate(points)));
-        gradeStats.add(new Pair("mean", mean.evaluate(grades)));
+        pointStats.add(mean.evaluate(points));
+        gradeStats.add(mean.evaluate(grades));
         
         Median md = new Median();
-        pointStats.add(new Pair("median", md.evaluate(points)));
-        gradeStats.add(new Pair("median", md.evaluate(grades)));
+        pointStats.add(md.evaluate(points));
+        gradeStats.add(md.evaluate(grades));
         
         StandardDeviation sd = new StandardDeviation();
-        pointStats.add(new Pair("deviation", sd.evaluate(points)));
-        gradeStats.add(new Pair("deviation", sd.evaluate(grades)));
+        pointStats.add(sd.evaluate(points));
+        gradeStats.add(sd.evaluate(grades));
     }
     
-    public List<Pair<String,Double>> getPoints()
+    public List<Double> getPoints()
     {
         return pointStats;
     }
     
-    public List<Pair<String,Double>> getGrades()
+    public List<Double> getGrades()
     {
         return gradeStats;
     }
