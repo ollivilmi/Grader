@@ -37,14 +37,18 @@ $(document).ready(function() {
     {
         $.getJSON(url, function(grades)
         {
-            let results = "";
+            let gradeTable = "", bellCurveTable = "";
+
                 for (let g of grades)
                 {
-                    results += "<tr><th scope='row'>"+g.grade+"</th>"
+                    gradeTable += "<tr><th scope='row'>"+g.grade+"</th>"
                     +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"'/></td>"
                     +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"'/>%</td></tr>";
+                    bellCurveTable += '<tr><th scope="row">'+g.grade+'</th>'
+                    +'<td><input type="number" step="1" class="percentage number"/></td>';
                 }
-                $('#gradeTable').html(results);
+                $('#gradeTable').html(gradeTable);
+                $('#bellCurveTable').html(bellCurveTable);
                 updateListeners();
         }).always(getResults);
     }
@@ -100,16 +104,23 @@ $(document).ready(function() {
             // Mean - Median - Deviation
 
             // Table row - Points
-            results = "<tr><td>Points</td>";
-            for (let stat of stats.value.points)
-                results += '<td>'+Math.round(stat*100)/100+'</td>';
-            results += '</tr><tr><td>Grades</td>';
+            if (stats.value.points !== null)
+            {
+                results = "<tr><td>Points</td>";
+                for (let stat of stats.value.points)
+                    results += '<td>'+Math.round(stat*100)/100+'</td>';
+                results += '</tr><tr><td>Grades</td>';
 
-            // Table row - Grades
-            for (let stat of stats.value.grades)
-                results += '<td>'+Math.round(stat*100)/100+'</td>';
-                results += '</td>';
-            $('#statistics').html(results);
+                // Table row - Grades
+                for (let stat of stats.value.grades)
+                    results += '<td>'+Math.round(stat*100)/100+'</td>';
+                    results += '</td>';
+                $('#statistics').html(results);
+
+                let i = 0;
+                for(let stat of stats.value.resultPercentages)
+                    $('.percentage')[i++].value = Math.round(stat*100);
+            }
         })
         // After generating a table of students, handle user inputs
         // - Refreshes student results after inputs - .always(getResults))

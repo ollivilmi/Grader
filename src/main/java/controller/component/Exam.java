@@ -11,6 +11,7 @@ public class Exam {
     private int preset;
     private Grade grade;
     private TreeMap<Double, Double> thresholds;
+    private TreeMap<Integer, Student> students;
     
     public Exam(double min, double max, Grade grade, int preset)
     {
@@ -19,6 +20,7 @@ public class Exam {
         this.grade = grade;
         this.preset = preset;
         this.total = max-min;
+        this.students = new TreeMap<>();
         generateThresholds();
     }
     
@@ -228,6 +230,11 @@ public class Exam {
     public Grade getGrade()
     {
         return grade;
+    }
+    
+    public TreeMap<Integer, Student> getStudents()
+    {
+        return students;
     }
     
     @Override

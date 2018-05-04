@@ -10,6 +10,7 @@ import controller.Grader;
 import controller.model.Statistic;
 import controller.component.Student;
 import controller.model.Threshold;
+import java.util.ArrayList;
 import org.apache.commons.math3.util.Pair;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,7 +90,7 @@ public class GraderResources {
     
     // Get student results for current Exam
     @RequestMapping("/getResults")
-    public Pair<List<Student>,Statistic> getResults(HttpSession session) 
+    public Pair<ArrayList<Student>,Statistic> getResults(HttpSession session) 
     {
         Grader grader = (Grader) session.getAttribute("Grader");
         if (grader != null)

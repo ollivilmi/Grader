@@ -36,6 +36,12 @@ public class Grader_Tests {
         assertNotNull(grader.getExamResults());
     }
     
+    @Test public void getStatistics() {
+        Grader grader = testObject();
+        grader.addStudent(1, "student");
+        assertNotNull(grader.getExamResults());
+    }
+    
     private Grader testObject()
     {
         Grade grade = new Grade(1,5,0.5);
