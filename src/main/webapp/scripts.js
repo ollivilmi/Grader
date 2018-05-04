@@ -91,7 +91,8 @@ $(document).ready(function() {
                 results += '<tr><td>'+student.id+'</td>'
                 +'<td>'+student.name+'</td>'
                 +'<td><input type="number" step="0.5" class="studentResults number" value="'+student.points+'" /></td>'
-                +'<td>'+student.grade+'</td></tr>';
+                +'<td>'+student.grade+'</td>'
+                +'<td><button class="removeStudent">X</button></td></tr>';
             }
             $('#results').html(results);
 
@@ -111,13 +112,19 @@ $(document).ready(function() {
             $('#statistics').html(results);
         })
         // After generating a table of students, handle user inputs
-        // for changing Student information
+        // - Refreshes student results after inputs - .always(getResults))
 
         .always(function() {
+            // User input - changed a student's points
             $('.studentResults').change(function() {
                 let url = "/addResult?studentId="+this.parentNode.previousSibling.previousSibling.innerHTML+'&studentResult='+this.value;
                 $.getJSON(url).always(getResults);
-            })
+            });
+            // User input - removed a student
+            $('.removeStudent').click(function() {
+                let url = "/removeStudent?studentId="+this.parentNode.parentNode.firstChild.innerHTML;
+                $.getJSON(url).always(getResults);
+            });
         });
         return false;
     }

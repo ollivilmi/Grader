@@ -105,9 +105,16 @@ public class GraderResources {
     {
         Grader grader = (Grader) session.getAttribute("Grader");
         if (grader != null)
-        {
             grader.addStudent(studentId, studentName);
-        }
+    }
+    
+    @RequestMapping("/removeStudent")
+    public void removeStudent(HttpSession session, @RequestParam(value="studentId") 
+            int studentId)
+    {
+        Grader grader = (Grader) session.getAttribute("Grader");
+        if (grader != null)
+            grader.removeStudent(studentId);
     }
     
     @RequestMapping("/addResult")

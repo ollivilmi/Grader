@@ -51,6 +51,11 @@ public class Grader {
         students.put(id, student);
     }
     
+    public void removeStudent(int id)
+    {
+        students.remove(id);
+    }
+    
     public void addResult(int id, double result)
     {
         students.get(id).addResult(exam, result);
