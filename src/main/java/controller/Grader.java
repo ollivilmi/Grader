@@ -32,8 +32,9 @@ public class Grader {
     public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         Grade newGrade = new Grade(minGrade, maxGrade, intervalGrade);
+        this.grade = newGrade;
         this.maxPoints = maxPoints;
-        exam.updateConfig(minPoints, maxPoints, grade, preset);
+        exam.updateConfig(minPoints, maxPoints, newGrade, preset);
     }
     
     public void addStudent(int id, String name)

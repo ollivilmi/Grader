@@ -53,7 +53,6 @@ public class GraderResources {
     public Grader loadSession(HttpServletRequest request, HttpSession session,HttpServletResponse response)
             throws SQLException, IOException
     {
-        
             Grader grader = (Grader) session.getAttribute("Grader");
             if (grader != null)
                 return grader;
