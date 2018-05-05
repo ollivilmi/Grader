@@ -2,7 +2,7 @@ package main;
 
 import org.junit.Test;
 import static org.junit.Assert.*;
-import org.classes.Grade;
+import controller.component.Grade;
 
 public class Grade_Tests {
     @Test public void correctGradeThresholds() {

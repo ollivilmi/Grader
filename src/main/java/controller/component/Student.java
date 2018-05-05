@@ -1,20 +1,17 @@
-package org.classes;
-
-import java.util.HashMap;
+package controller.component;
 
 public class Student {
     
     private int id;
     private String name;
     private double points, grade;
-    private HashMap<Exam, Double> pointsByExam;
     
     public Student(int id, String name)
     {
         this.id = id;
         this.name = name;
-        this.pointsByExam = new HashMap<>();
         this.points = 0;
+        this.grade = 0;
     }
     
     public int getId()
@@ -37,22 +34,13 @@ public class Student {
         return grade;
     }
     
-    public void setResult(double points, double grade)
+    public void setPoints(double points)
     {
         this.points = points;
+    }
+    
+    public void setGrade(double grade)
+    {
         this.grade = grade;
-    }
-    
-    public void addResult(Exam exam, double points)
-    {
-        pointsByExam.put(exam, points);
-    }
-    
-    public Double getResult(Exam exam)
-    {
-        Double result = pointsByExam.get(exam);
-        if (result != null)
-            return result;
-        else return 0.0;
     }
 }

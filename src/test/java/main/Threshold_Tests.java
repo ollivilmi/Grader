@@ -1,6 +1,6 @@
 package main;
 
-import org.classes.Threshold;
+import controller.model.Threshold;
 import org.junit.Test;
 import static org.junit.Assert.*;
 

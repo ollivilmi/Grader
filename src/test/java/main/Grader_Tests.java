@@ -3,9 +3,9 @@ package main;
 import java.util.Map;
 import java.util.Random;
 import org.junit.Test;
-import org.classes.Exam;
-import org.classes.Grade;
-import org.classes.Grader;
+import controller.component.Exam;
+import controller.component.Grade;
+import controller.Grader;
 import static org.junit.Assert.*;
 
 public class Grader_Tests {
@@ -33,6 +33,12 @@ public class Grader_Tests {
             grader.addStudent(i, "student");
             grader.addResult(i, 30 * random.nextDouble());
         }
+        assertNotNull(grader.getExamResults());
+    }
+    
+    @Test public void getStatistics() {
+        Grader grader = testObject();
+        grader.addStudent(1, "student");
         assertNotNull(grader.getExamResults());
     }
     

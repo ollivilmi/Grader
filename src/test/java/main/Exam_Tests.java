@@ -3,8 +3,8 @@ package main;
 import java.util.ArrayList;
 import java.util.TreeMap;
 import org.junit.Test;
-import org.classes.Exam;
-import org.classes.Grade;
+import controller.component.Exam;
+import controller.component.Grade;
 import static org.junit.Assert.*;
 
 public class Exam_Tests {
@@ -43,11 +43,11 @@ public class Exam_Tests {
         Exam exam2 = new Exam(10,30,grade,1);
         assertEquals(exam1.getThresholds(), exam2.getThresholds());
         
-        exam1.updateConfig(10, 50, 3);
+        exam1.updateConfig(10, 50, grade, 3);
         assertTrue(exam1.getThresholds() != exam2.getThresholds());
-        exam2.updateConfig(10, 50, 3);
+        exam2.updateConfig(10, 50, grade, 3);
         assertEquals(exam1.getThresholds(), exam2.getThresholds());
-        exam1.updateConfig(10, 50, 2);
+        exam1.updateConfig(10, 50, grade, 2);
         assertTrue(exam1.getThresholds() != exam2.getThresholds());
     }
     
@@ -65,7 +65,7 @@ public class Exam_Tests {
         for (int i = 10, j = 50; i < 500; i+=20, j+=20)
             for (int k = 1; k<5; k++)
             {
-                exam.updateConfig(i, j, k);
+                exam.updateConfig(i, j, grade, k);
                 assertEquals(exam.getReverseMap().lastKey(), exam.getThresholds().lastEntry().getValue());
                 assertEquals(exam.getReverseMap().firstKey(), exam.getThresholds().firstEntry().getValue());
             }

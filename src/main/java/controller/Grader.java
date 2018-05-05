@@ -1,22 +1,25 @@
-package org.classes;
+package controller;
 
+import controller.model.Statistic;
+import controller.model.Threshold;
+import controller.component.Student;
+import controller.component.Grade;
+import controller.component.Exam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import org.apache.commons.math3.util.Pair;
 
 public class Grader {
     private Grade grade;
     private Exam exam;
     private double maxPoints;
-    private TreeMap<Integer, Student> students;
     
     public Grader(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         this.grade = new Grade(minGrade, maxGrade, intervalGrade);
         this.exam = new Exam(minPoints, maxPoints, grade, preset);
         this.maxPoints = maxPoints;
-        this.students = new TreeMap<>();
     }
     
     public Grader(Grade grade, Exam exam)
@@ -24,54 +27,39 @@ public class Grader {
         this.grade = grade;
         this.exam = exam;
         this.maxPoints = exam.getMax();
-        this.students = new TreeMap<>();
     }
     
     public void updateConfig(double minGrade, double maxGrade, double intervalGrade, double minPoints, double maxPoints, int preset)
     {
         Grade newGrade = new Grade(minGrade, maxGrade, intervalGrade);
+        this.grade = newGrade;
         this.maxPoints = maxPoints;
-        if (grade.compareTo(newGrade) == -1)
-        {
-            this.grade = newGrade;
-            this.exam = new Exam(minPoints, maxPoints, grade, preset);
-        }
-        else exam.updateConfig(minPoints, maxPoints, preset);
+        exam.updateConfig(minPoints, maxPoints, newGrade, preset);
     }
     
     public void addStudent(int id, String name)
     {
-        Student student = new Student(id, name);
-        students.put(id, student);
+        exam.getStudents().put(id, new Student(id, name));
+    }
+    
+    public void removeStudent(int id)
+    {
+        exam.getStudents().remove(id);
     }
     
     public void addResult(int id, double result)
     {
-        students.get(id).addResult(exam, result);
+        exam.getStudents().get(id).setPoints(result);
     }
     
-    public ArrayList<Student> getExamResults()
+    /***
+     * Returns list of Students & Statistic object which are used to extract
+     * information about the results (Mean, Median, Deviation, redistribution)
+     * @return 
+     */
+    public Pair<ArrayList<Student>,Statistic> getExamResults()
     {
-        ArrayList<Student> results = new ArrayList<>();
-        TreeMap<Double, Double> thresholds = exam.getReverseMap();
-        
-        for (Map.Entry<Integer,Student> entry : students.entrySet())
-        {
-            Student student = entry.getValue();
-            Double points = student.getResult(exam), result;
-            
-            try {
-                result = thresholds.floorEntry(points).getValue();
-            }
-            catch (NullPointerException e)
-            {
-                result = 0.0;
-            }
-            
-            student.setResult(points, result);
-            results.add(student);
-        }
-        return results;
+        return new Pair(new ArrayList<>(exam.getStudents().values()), new Statistic(exam));
     }
     
     /***
