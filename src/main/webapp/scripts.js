@@ -37,15 +37,14 @@ $(document).ready(function() {
     {
         $.getJSON(url, function(grades)
         {
-            let gradeTable = "", bellCurveTable = "";
+            let gradeTable = "", bellCurveTable = '<th scope="col">Grade</th>';
 
                 for (let g of grades)
                 {
                     gradeTable += "<tr><th scope='row'>"+g.grade+"</th>"
                     +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"'/></td>"
                     +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"'/>%</td></tr>";
-                    bellCurveTable += '<tr><th scope="row">'+g.grade+'</th>'
-                    +'<td><input type="number" step="1" class="percentage number"/></td>';
+                    bellCurveTable += '<th scope="col" class="grade">'+g.grade+'</th>';
                 }
                 $('#gradeTable').html(gradeTable);
                 $('#bellCurveTable').html(bellCurveTable);
@@ -117,9 +116,11 @@ $(document).ready(function() {
                     results += '</td>';
                 $('#statistics').html(results);
 
-                let i = 0;
-                for(let stat of stats.value.resultPercentages)
-                    $('.percentage')[i++].value = Math.round(stat*100);
+                results = "<tr><th scope='row'>Points</th>";
+                for(let stat of stats.value.suggestedPoints)
+                    results += '<td><input type="number" step="1" class="suggestedPoints number" value="'+stat+'"/></td>'
+                results += '</tr>'
+                $('#bellCurvePoints').html(results);
             }
         })
         // After generating a table of students, handle user inputs
@@ -140,6 +141,17 @@ $(document).ready(function() {
         return false;
     }
 
+    function peerDistribution()
+    {
+        let grades = $('.grade'); let i = 0;
+        for (let point of $('.suggestedPoints'))
+        {
+            let url = "/setByPoints?grade="+grades[i++].innerHTML+"&points="+point.value;
+            updateThresholds(url); 
+        }
+        return false;
+    }
+
     // Creates a new Exam object with the configurations the user has set
     // - Creates new grade Thresholds from the settings
     $('#getThresholds').click(updateConfig);
@@ -148,4 +160,6 @@ $(document).ready(function() {
     // - Adds student
     // - Refreshes student results
     $('#addStudent').click(addStudent);
+
+    $('#peerDistribution').click(peerDistribution);
 });
