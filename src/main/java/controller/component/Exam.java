@@ -7,8 +7,8 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class Exam {
-    private double min, max, total;
-    private int preset;
+    private double minPoints, maxPoints, rangeOfPoints;
+    private int thresholdPreset;
     private Grade grade;
     private TreeMap<Double, Double> thresholds;
     private TreeMap<Integer, Student> students;
@@ -26,10 +26,10 @@ public class Exam {
         else if (grade.compareTo(this.grade) == -1)
             this.grade = grade;
         
-        this.min = min;
-        this.max = max;
-        this.preset = preset;
-        this.total = max-min;
+        this.minPoints = min;
+        this.maxPoints = max;
+        this.thresholdPreset = preset;
+        this.rangeOfPoints = max-min;
         generateThresholds();
     }
 
@@ -38,25 +38,26 @@ public class Exam {
         // Ordered TreeMap
         // Threshold contains Grade - Points
         thresholds = new TreeMap<>();
-        double mean = (max+min)/2, growth;
                 
         // preset: int value in <select id="preset"></select>
-        switch (preset)
+        switch (thresholdPreset)
         {
             case 1:
                 // calculate standard interval for grade thresholds
-                double deviation = (total) / grade.getAmount();
+                double interval = (rangeOfPoints) / grade.getAmount(), points = minPoints;
                 
-                double g = min;
-                for (int i = 0; i<grade.getAmount(); g += deviation, i++)
-                    thresholds.put(grade.getDistribution().get(i), roundToHalf(g));
+                // distributes Points from Min -> Max by adding the interval
+                // for each iteration
+                for (int i = 0; i<grade.getAmount(); points += interval, i++)
+                    thresholds.put(grade.getDistribution().get(i), roundToHalf(points));
                 break;
                 
             case 2:
                 // Uses a variance of max-min/4 for random gaussian distribution
-                double variance = (total)/4;
+                double variance = (rangeOfPoints)/4, mean = (maxPoints+minPoints)/2;
+                
                 Iterator iterator = randomGaussianDistribution(mean, variance).iterator();
-                thresholds.put(grade.getDistribution().get(0), min);    
+                thresholds.put(grade.getDistribution().get(0), minPoints);    
                 
                 for (int i = 1, n = grade.getAmount(); i<n; i++)
                     thresholds.put(grade.getDistribution().get(i), (double) iterator.next());
@@ -66,22 +67,22 @@ public class Exam {
             case 3:
                 // Get N:th root = amount of grades total for exponential growth
                 // Value range = total points - 5% of total points
-                growth = nthRoot(grade.getAmount(), (total)-(0.05*total));
-                thresholds.put(grade.getDistribution().get(0), min);
+                double growthMultiplier = nthRoot(grade.getAmount(), (rangeOfPoints)-(0.05*rangeOfPoints));
+                thresholds.put(grade.getDistribution().get(0), minPoints);
                 
                 // We receive growth value, which is used in the function:
                 // growth ^ x
                 for (int i = 1, n = grade.getAmount(); i<n; i++)
-                    thresholds.put(grade.getDistribution().get(i), roundToHalf(min+Math.pow(growth, i+1)));
+                    thresholds.put(grade.getDistribution().get(i), roundToHalf(minPoints+Math.pow(growthMultiplier, i+1)));
                 break;
             // Hard exam - most thresholds near min points
             case 4:
-                growth = nthRoot(grade.getAmount(), (total)-(0.05*total));
-                thresholds.put(grade.getDistribution().get(0), min);
+                growthMultiplier = nthRoot(grade.getAmount(), (rangeOfPoints)-(0.05*rangeOfPoints));
+                thresholds.put(grade.getDistribution().get(0), minPoints);
                 
                 // Same principle as case 3 with reverse order (max - value)
                 for (int i = grade.getAmount()-1, j = 1; i>0; i--, j++)
-                    thresholds.put(grade.getDistribution().get(j), roundToHalf(max-Math.pow(growth, i+1)));
+                    thresholds.put(grade.getDistribution().get(j), roundToHalf(maxPoints-Math.pow(growthMultiplier, i+1)));
                 break;
         }
     }
@@ -97,17 +98,17 @@ public class Exam {
      */
     private TreeSet<Double> randomGaussianDistribution(Double mean, double variance)
     {
-        double gaussian = 0;
+        double randomGaussian = 0;
         TreeSet<Double> grades = new TreeSet<>();
         Random random = new Random();
 
         while (grades.size() < grade.getAmount()-1)
         {
-            gaussian = roundToHalf(mean + random.nextGaussian() * variance);
-            if (gaussian > max*0.95)
-                grades.add(roundToHalf(max*0.95));
-            else if (gaussian > min)
-                grades.add(gaussian);
+            randomGaussian = roundToHalf(mean + random.nextGaussian() * variance);
+            if (randomGaussian > maxPoints*0.95)
+                grades.add(roundToHalf(maxPoints*0.95));
+            else if (randomGaussian > minPoints)
+                grades.add(randomGaussian);
         }
         return grades;
     }
@@ -163,10 +164,10 @@ public class Exam {
      */
     public void setThreshold(double grade, double points, double previousPoints)
     {
-        if (points < min)
-            points = min;
-        else if (points > max)
-            points = max;
+        if (points < minPoints)
+            points = minPoints;
+        else if (points > maxPoints)
+            points = maxPoints;
         thresholds.replace(grade, points);
         // If the points were increased, check the above grades and increase
         // their points to the new threshold + 0.5
@@ -178,7 +179,7 @@ public class Exam {
                 if (t.getValue() <= points)
                 {
                     t.setValue(points);
-                    if (points < max)
+                    if (points < maxPoints)
                         points += 0.5;
                 }
             }
@@ -194,8 +195,8 @@ public class Exam {
                 double newValue = points-(i--*0.5);
                 if (t.getValue() >= points)
                 {
-                    if (newValue < min)
-                        newValue = min;
+                    if (newValue < minPoints)
+                        newValue = minPoints;
                     t.setValue(newValue);
                 }
             }
@@ -207,24 +208,24 @@ public class Exam {
         thresholds = newThresholds;
     }
     
-    public double getPoints()
+    public double getRangeOfPoints()
     {
-        return max-min;
+        return rangeOfPoints;
     }
     
     public double getMax()
     {
-        return max;
+        return maxPoints;
     }
     
     public double getMin()
     {
-        return min;
+        return minPoints;
     }
     
     public int getPreset()
     {
-        return preset;
+        return thresholdPreset;
     }
     
     public Grade getGrade()

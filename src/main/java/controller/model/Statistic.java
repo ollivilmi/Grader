@@ -100,7 +100,7 @@ public class Statistic {
             // Assess the probability for each possible Threshold in the exam,
             // considering the results.
             
-            // Points -> Probability
+            // Probability -> Points
             TreeMap<Double,Double> pointsAndProbability = new TreeMap<>();
             
             for (double points = exam.getMin(); points<exam.getMax(); points += 0.5)
@@ -110,7 +110,7 @@ public class Statistic {
             int amountOfThresholds = exam.getGrade().getAmount();
             // It is used to split the interval of probabilities.
             // - 0.1 cumulative probability up to -> 0.9 cumulative probability
-            double probability = 0.1, interval = 0.8 / amountOfThresholds; int i = 0;
+            double probability = 0.1, interval = 0.8 / amountOfThresholds;
             suggestedThresholds = new TreeMap<>();
                         
             for (Double grade : exam.getGrade().getDistribution())
