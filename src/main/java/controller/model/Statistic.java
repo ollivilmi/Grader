@@ -15,23 +15,43 @@ public class Statistic {
     private List<Double> pointStats, gradeStats, suggestedPoints;
     private TreeMap<Double,Double> suggestedThresholds;
     
+    /***
+     * Analyzes results from the Exam object.
+     * Points & Grades
+     * - Mean, Median, Deviation
+     * 
+     * Then uses normal distribution to assess results
+     * and suggests a distribution where:
+     * - The worst grade has a probability of at least 10%
+     * - The best grade has a probability of roughly ~10%
+     * - Mean has a probability of ~ 50%
+     * 
+     * @param exam 
+     */
     public Statistic (Exam exam)
     {
         TreeMap<Integer, Student> students = exam.getStudents();
         if (students.size() < 1)
             return;
         
+        // Saves point & Grade results for analysis
         double [] allGrades = new double[students.size()];
         double [] allPoints = new double[students.size()];
+        
+        // Reverse map to access Thresholds by Point -> Grade
+        // - Checks & sets the grade for a student
         TreeMap<Double, Double> examThresholds = exam.getReverseMap();
         
-        int i = 0; double mostPoints = 0, leastPoints = 0;
+        // numberOfStudents = saves value to array (allGrades, allPoints)
+        // mostPoints = best result of points in exam
+        // leastPoints = worst result of points in exam
+        int numberOfStudents = 0; double mostPoints = 0, leastPoints = 0;
+        
         for (Map.Entry<Integer,Student> entry : students.entrySet())
         {
             Student student = entry.getValue();
             Double pointsFromExam = student.getPoints(), gradeFromExam;
             
-            // Get grade from Exam thresholds
             if (pointsFromExam > examThresholds.firstKey())
                 gradeFromExam = examThresholds.floorEntry(pointsFromExam).getValue();
             else
@@ -45,15 +65,18 @@ public class Statistic {
             student.setPoints(pointsFromExam);
             student.setGrade(gradeFromExam);
              
-            allPoints[i] = pointsFromExam;
-            allGrades[i] = gradeFromExam;
-            i++;
+            allPoints[numberOfStudents] = pointsFromExam;
+            allGrades[numberOfStudents] = gradeFromExam;
+            numberOfStudents++;
         }
         
         pointStats = new ArrayList<>();
         gradeStats = new ArrayList<>();
         suggestedPoints = new ArrayList<>();
 
+        // Apache Math Library to assess results
+        // http://commons.apache.org/proper/commons-math/javadocs/api-3.6.1/index.html
+        
         Mean mean = new Mean();
         pointStats.add(mean.evaluate(allPoints));
         gradeStats.add(mean.evaluate(allGrades));
@@ -66,21 +89,34 @@ public class Statistic {
         pointStats.add(sd.evaluate(allPoints));
         gradeStats.add(sd.evaluate(allGrades));
         
-        if (pointStats.get(2) != 0) // If deviation != 0
+        // If the deviation of results is not 0 (all the results are not the same)
+        // Use normal distribution to suggest grade redistribution
+        
+        if (pointStats.get(2) != 0)
         {
+            // Normal Distribution uses Mean & Deviation from the student points
             NormalDistribution nd = new NormalDistribution(pointStats.get(0), pointStats.get(2));
-            int amountOfThresholds = exam.getGrade().getAmount();
             
+            // Assess the probability for each possible Threshold in the exam,
+            // considering the results.
+            
+            // Points -> Probability
             TreeMap<Double,Double> pointsAndProbability = new TreeMap<>();
             
             for (double points = exam.getMin(); points<exam.getMax(); points += 0.5)
                 pointsAndProbability.put(nd.cumulativeProbability(points), points);
             
-            double probability = 0.1, interval = 0.8 / amountOfThresholds; i = 0;
-            
+            // To redistribute the thresholds, we need to know the amount of thresholds.
+            int amountOfThresholds = exam.getGrade().getAmount();
+            // It is used to split the interval of probabilities.
+            // - 0.1 cumulative probability up to -> 0.9 cumulative probability
+            double probability = 0.1, interval = 0.8 / amountOfThresholds; int i = 0;
             suggestedThresholds = new TreeMap<>();
+                        
             for (Double grade : exam.getGrade().getDistribution())
             {
+                // For each iteration, we check which points are closest to the probability
+                // - 0.1, 0,2, ..., 0.9 (for example)
                 suggestedThresholds.put(grade,pointsAndProbability.ceilingEntry(probability).getValue());
                 probability += interval;
             }   
@@ -89,21 +125,37 @@ public class Statistic {
         }
     }
     
+    /***
+     * List which contains Mean, Median, Deviation
+     * @return 
+     */
     public List<Double> getPoints()
     {
         return pointStats;
     }
     
+    /***
+     * List which contains Mean, Median, Deviation
+     * @return 
+     */
     public List<Double> getGrades()
     {
         return gradeStats;
     }
     
+    /***
+     * TreeMap of Thresholds, may be used to change Thresholds
+     * @return 
+     */
     public TreeMap<Double,Double> getSuggestedThresholds()
     {
         return suggestedThresholds;
     }
     
+    /***
+     * List which contains the suggested point distribution in order
+     * @return 
+     */
     public List<Double> getSuggestedPoints()
     {
         return suggestedPoints;

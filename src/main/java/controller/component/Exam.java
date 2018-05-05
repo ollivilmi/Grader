@@ -15,17 +15,17 @@ public class Exam {
     
     public Exam(double min, double max, Grade grade, int preset)
     {
-        this.min = min;
-        this.max = max;
-        this.grade = grade;
-        this.preset = preset;
-        this.total = max-min;
+        updateConfig(min, max, grade, preset);
         this.students = new TreeMap<>();
-        generateThresholds();
     }
     
-    public void updateConfig(double min, double max, int preset)
+    public void updateConfig(double min, double max, Grade grade, int preset)
     {
+        if (this.grade == null)
+            this.grade = grade;
+        else if (grade.compareTo(this.grade) == -1)
+            this.grade = grade;
+        
         this.min = min;
         this.max = max;
         this.preset = preset;

@@ -33,12 +33,7 @@ public class Grader {
     {
         Grade newGrade = new Grade(minGrade, maxGrade, intervalGrade);
         this.maxPoints = maxPoints;
-        if (grade.compareTo(newGrade) == -1)
-        {
-            this.grade = newGrade;
-            this.exam = new Exam(minPoints, maxPoints, grade, preset);
-        }
-        else exam.updateConfig(minPoints, maxPoints, preset);
+        exam.updateConfig(minPoints, maxPoints, grade, preset);
     }
     
     public void addStudent(int id, String name)
@@ -56,6 +51,11 @@ public class Grader {
         exam.getStudents().get(id).setPoints(result);
     }
     
+    /***
+     * Returns list of Students & Statistic object which are used to extract
+     * information about the results (Mean, Median, Deviation, redistribution)
+     * @return 
+     */
     public Pair<ArrayList<Student>,Statistic> getExamResults()
     {
         return new Pair(new ArrayList<>(exam.getStudents().values()), new Statistic(exam));
