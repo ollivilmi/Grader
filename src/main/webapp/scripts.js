@@ -164,19 +164,13 @@ $(document).ready(function() {
     $('#peerDistribution').click(peerDistribution);
 });
 
-function showOrHide(str) {
-	var x = document.getElementById(str);
-    if(x.style.display === "none")
-        x.style.display = "block"
-    else
-        x.style.display = "none"
+function showResults() {
+  $('#resultsContainer').css("display", "block");
+  $('#thresholdsContainer').css("display", "none");
 }
 
-function showStudentField() {
-  showOrHide("student");
-}
-
-function showCreateField() {
-showOrHide("createExam");
+function showThresholds() {
+    $('#resultsContainer').css("display", "none");
+    $('#thresholdsContainer').css("display", "block");
 }
 

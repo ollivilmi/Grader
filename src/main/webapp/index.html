@@ -13,42 +13,48 @@
   </head>
 
   <body>
+  <div class="container">
     <div class="header">
       <h1>GRADER</h1>
       <p>Setting up the student grades</p>
     </div>
 
     <div class="navbar">
-      <a href="#" class="right">RESET</a>
+      <button class="button" onclick="showResults()">View results</button>
+      <button class="button" onclick="showThresholds()">Adjust thresholds</button>
+      <button class="button" id="reset">RESET</button>
     </div>
 
     <div class="row">
       <div class="side">
         <div class="btn-group">
-          <button class="button" onclick="showCreateField()">Create exam</button>
-          <button class="button" onclick="showStudentField()">Add students</button>
+          <button class="button">Change configuration</button>
+            <div class="fields">
+              <fieldset id="config">
+                Min grade: <input class="number" type="number" step="0.5" id="gradeMin" value=0 min=0/> Max grade: <input class="number" type="number" step="0.5" id="gradeMax" value=5 min=0/> Grade interval: <input class="number" type="number" step="0.5"
+                  id="gradeInterval" value=0.5 /> Min points for exam: <input class="number" type="number" step="0.5" id="examMin" value=0 /> Max points for exam: <input class="number" type="number" step="0.5" id="examMax" value=30 /> Select preset
+                <select id="preset">
+                <option value=1>Equally spread</option>
+                <option value=2>Random gaussian distribution</option>
+                <option value=3>Hard exam</option>
+                <option value=4>Easy exam</option>
+              </select>
+                <button id="getThresholds" class="btn">Update</button>
+              </fieldset>
+            </div>
+          <button class="button">Add students</button>
+          <div class="fields">
+            <fieldset>
+              Student ID: <input class="number" type="number" step="1" id="studentId" placeholder="integer" /> Student name: <input class="number" type="text" id="studentName" placeholder="not required" />
+              <button id="addStudent" class="btn btn-default">Add</button>
+            </fieldset>
+          </div>
         </div>
       </div>
 
       <div class="main">
-        <div class="fields" style="display:none" id="createExam">
-          <fieldset id="config">
-            Min grade: <input class="number" type="number" step="0.5" id="gradeMin" value=0 min=0/> Max grade: <input class="number" type="number" step="0.5" id="gradeMax" value=5 min=0/> Grade interval: <input class="number" type="number" step="0.5"
-              id="gradeInterval" value=0.5 /> Min points for exam: <input class="number" type="number" step="0.5" id="examMin" value=0 /> Max points for exam: <input class="number" type="number" step="0.5" id="examMax" value=30 /> Select preset
-            <select id="preset">
-            <option value=1>Equally spread</option>
-            <option value=2>Random gaussian distribution</option>
-            <option value=3>Hard exam</option>
-            <option value=4>Easy exam</option>
-          </select>
-            <button id="getThresholds" class="btn btn-default bg-bluewhite">Create exam</button>
-          </fieldset>
-        </div>
-        <div class="card-blue-gradient" style="display:none" id="student">
-          <fieldset>
-            Student ID: <input class="number" type="number" step="1" id="studentId" /> Student name: <input class="number" type="text" id="studentName" placeholder="name" />
-            <button id="addStudent" class="btn btn-default bg-bluewhite">Add</button>
-          </fieldset><br><br><br><br>
+        <div id="resultsContainer"  style="display:none;">
+          <h4>Students</h4>
           <table class="table">
             <thead class="thead">
               <th scope="col">Student ID</th>
@@ -59,8 +65,9 @@
             </thead>
             <tbody id="results"></tbody>
           </table>
-          </fieldset><br><br><br><br>
+          </fieldset>
 
+          <h4>Statistics</h4>
           <table class="table">
             <thead class="thead">
               <th scope="col"></th>
@@ -70,29 +77,32 @@
             </thead>
             <tbody id="statistics"></tbody>
           </table>
-        </div><br><br><br><br>
         <div>
-          <h1>Suggested redistribution (Peer relative results)</h1>
+        </div>
+      </div>
+        
+        <div id="thresholdsContainer">
+          <table class="table">
+            <thead class="thead">
+              <th scope="col">Grade</th>
+              <th scope="col">Points</th>
+              <th scope="col">Percentage</th><br>
+            </thead>
+            <tbody id="gradeTable"></tbody>
+          </table>
+
+          <h4>Suggested redistribution</h4>
           <table class="table">
             <thead class="thead" id="bellCurveTable">
             </thead>
             <tbody id="bellCurvePoints"></tbody>
           </table>
-          <button id="peerDistribution">Redistribute</button>
-        </div><br><br><br><br>
+          <button id="peerDistribution" class="button">Redistribute</button>
 
-        <table class="table">
-          <thead class="thead">
-            <th scope="col"></th>
-            <th scope="col">Grade</th>
-            <th scope="col">Points</th>
-            <th scope="col">Percentage</th><br>
-          </thead>
-          <tbody id="gradeTable"></tbody>
-        </table>
+        </div>
+      </div>
       </div>
     </div>
-    </div>
+  </div>
   </body>
-
 </html>
