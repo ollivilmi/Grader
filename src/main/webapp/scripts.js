@@ -163,3 +163,14 @@ $(document).ready(function() {
 
     $('#peerDistribution').click(peerDistribution);
 });
+
+function showResults() {
+  $('#resultsContainer').css("display", "block");
+  $('#thresholdsContainer').css("display", "none");
+}
+
+function showThresholds() {
+    $('#resultsContainer').css("display", "none");
+    $('#thresholdsContainer').css("display", "block");
+}
+
