@@ -25,6 +25,19 @@ public class Grader_Tests {
             assertTrue(grader.getExam().getThresholds().get(1.0) == 10);
     }
     
+    @Test public void testPercentages() {
+        Grader grader = testObject();
+        for (Map.Entry<Double, Double> t : grader.getExam().getThresholds().entrySet())
+        {
+            grader.setByPercentage(t.getKey(), 50);
+            assertTrue(t.getValue() == 15);
+        }  
+            grader.setByPercentage(1.0, 0);
+            assertTrue(grader.getExam().getThresholds().get(1.0) == 10);
+            grader.setByPercentage(1.0, 120);
+            assertTrue(grader.getExam().getThresholds().get(1.0) == 30);
+    }
+    
     @Test public void addStudents() {
         Grader grader = testObject();
         Random random = new Random();
@@ -39,6 +52,27 @@ public class Grader_Tests {
     @Test public void getStatistics() {
         Grader grader = testObject();
         grader.addStudent(1, "student");
+        assertNotNull(grader.getExamResults());
+    }
+    
+    @Test public void addAndRemoveStudents() {
+        Grader grader = testObject();
+        for (int i = 0; i<100; i++)
+            grader.addStudent(i, "student");
+        assertTrue(grader.getExam().getStudents().size() == 100);
+        for (int i = 0; i<100; i++)
+            grader.removeStudent(i);
+        assertTrue(grader.getExam().getStudents().isEmpty());
+    }
+    
+    @Test public void addNegativeResults() {
+        Grader grader = testObject();
+        Random random = new Random();
+        for (int i = 0; i<100; i++)
+        {
+            grader.addStudent(i, "student");
+            grader.addResult(i, -30*random.nextDouble());
+        }
         assertNotNull(grader.getExamResults());
     }
     
