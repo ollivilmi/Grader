@@ -42,8 +42,8 @@ $(document).ready(function() {
                 for (let g of grades)
                 {
                     gradeTable += "<tr><th scope='row'>"+g.grade+"</th>"
-                    +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"'/></td>"
-                    +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"'/>%</td></tr>";
+                    +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"' max='"+$('#examMax').val()+"' min='"+$('#examMin').val()+"'/></td>"
+                    +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"' min=0 max=100/>%</td></tr>";
                     bellCurveTable += '<th scope="col" class="grade">'+g.grade+'</th>';
                 }
                 $('#gradeTable').html(gradeTable);
@@ -93,7 +93,7 @@ $(document).ready(function() {
             {
                 results += '<tr><td>'+student.id+'</td>'
                 +'<td>'+student.name+'</td>'
-                +'<td><input type="number" step="0.5" class="studentResults number" value="'+student.points+'" /></td>'
+                +'<td><input type="number" step="0.5" class="studentResults number" value="'+student.points+'" max="'+$('#examMax').val()+'" min=0 /></td>'
                 +'<td>'+student.grade+'</td>'
                 +'<td><button class="removeStudent">X</button></td></tr>';
             }
@@ -118,7 +118,7 @@ $(document).ready(function() {
 
                 results = "<tr><th scope='row'>Points</th>";
                 for(let stat of stats.value.suggestedPoints)
-                    results += '<td><input type="number" step="1" class="suggestedPoints number" value="'+stat+'"/></td>'
+                    results += '<td><input type="number" step="1" class="suggestedPoints number" value="'+stat+'" max="'+$('#examMax').val()+'" min=0 /></td>'
                 results += '</tr>'
                 $('#bellCurvePoints').html(results);
             }
@@ -163,3 +163,20 @@ $(document).ready(function() {
 
     $('#peerDistribution').click(peerDistribution);
 });
+
+function showOrHide(str) {
+	var x = document.getElementById(str);
+    if(x.style.display === "none")
+        x.style.display = "block"
+    else
+        x.style.display = "none"
+}
+
+function showStudentField() {
+  showOrHide("student");
+}
+
+function showCreateField() {
+showOrHide("createExam");
+}
+
