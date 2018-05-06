@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,7 +17,6 @@
   <div class="container">
     <div class="header">
       <h1>GRADER</h1>
-      <p>Setting up the student grades</p>
     </div>
 
     <div class="navbar">
@@ -90,6 +90,8 @@
             </thead>
             <tbody id="gradeTable"></tbody>
           </table>
+
+          <canvas id="thresholdsGraph"></canvas>
 
           <h4>Suggested redistribution</h4>
           <table class="table">

@@ -35,12 +35,16 @@ $(document).ready(function() {
     // changed when the thresholds were adjusted
     function updateThresholds(url)
     {
-        $.getJSON(url, function(grades)
+        $.getJSON(url, function(thresholds)
         {
             let gradeTable = "", bellCurveTable = '<th scope="col">Grade</th>';
+            let ctx = document.getElementById('thresholdsGraph').getContext('2d');
+            let grades = [], points = [];
 
-                for (let g of grades)
+                for (let g of thresholds)
                 {
+                    grades.push(g.grade);
+                    points.push(g.points);
                     gradeTable += "<tr><th scope='row'>"+g.grade+"</th>"
                     +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"' max='"+$('#examMax').val()+"' min='"+$('#examMin').val()+"'/></td>"
                     +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"' min=0 max=100/>%</td></tr>";
@@ -48,6 +52,7 @@ $(document).ready(function() {
                 }
                 $('#gradeTable').html(gradeTable);
                 $('#bellCurveTable').html(bellCurveTable);
+                createChart(ctx, grades, points);
                 updateListeners();
         }).always(getResults);
     }
@@ -67,6 +72,30 @@ $(document).ready(function() {
         {
             let url = "/setByPercentage?grade="+this.parentNode.previousSibling.previousSibling.innerHTML+"&percentage="+this.value;
             updateThresholds(url);
+        });
+    }
+    
+    function createChart(ctx, grades, points)
+    {
+        let chart = new Chart(ctx,{
+            type: 'bar',
+            data: {
+                labels: grades,
+                datasets: [{
+                    label: "points",
+                    fill: false,
+                    borderColor: 'rgb(0,0,0)',
+                    data: points
+                }]
+            },
+            options: {
+                scales:
+                {
+                    xAxes: [{
+                        display: false
+                    }]
+                }
+            }
         });
     }
 
