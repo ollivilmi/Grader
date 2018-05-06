@@ -5,6 +5,7 @@ import java.util.TreeMap;
 import org.junit.Test;
 import controller.component.Exam;
 import controller.component.Grade;
+import java.util.Random;
 import static org.junit.Assert.*;
 
 public class Exam_Tests {
@@ -56,6 +57,27 @@ public class Exam_Tests {
         for (int i = 10, j = 50; i < 500; i+=20, j+=20)
             for (int k = 1; k<5; k++)
                 assertNotNull(new Exam(i,j,grade,2));
+    }
+    
+    @Test public void badConfiguration() {
+        Grade grade = new Grade(9,5,0.5);
+        Exam exam = new Exam(80,40,grade,1);
+        assertNotNull(exam);
+        exam = new Exam(80,40,grade,500);
+        assertNotNull(exam);
+        exam = new Exam(-40,-90,grade,500);
+        assertNotNull(exam);
+    }
+    
+    @Test public void randomGaussianDistribution() {
+        Grade grade = new Grade(0,5,0.5);
+        Random random = new Random();
+        Exam exam;
+        for (int i = 0; i<100; i++)
+        {
+            exam = new Exam(random.nextInt(300),random.nextInt(500),grade,2);
+            assertNotNull(exam);
+        }
     }
     
     @Test public void reverseMap() 

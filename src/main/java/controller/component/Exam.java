@@ -1,10 +1,14 @@
 package controller.component;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import org.apache.commons.math3.distribution.NormalDistribution;
+import org.apache.commons.math3.stat.descriptive.moment.Mean;
+import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
 public class Exam {
     private double minPoints, maxPoints, rangeOfPoints;
@@ -30,7 +34,8 @@ public class Exam {
         this.maxPoints = max;
         this.thresholdPreset = preset;
         this.rangeOfPoints = max-min;
-        generateThresholds();
+        if (rangeOfPoints > 0)
+            generateThresholds();
     }
 
     public void generateThresholds()
@@ -53,10 +58,8 @@ public class Exam {
                 break;
                 
             case 2:
-                // Uses a variance of max-min/4 for random gaussian distribution
-                double variance = (rangeOfPoints)/4, mean = (maxPoints+minPoints)/2;
                 
-                Iterator iterator = randomGaussianDistribution(mean, variance).iterator();
+                Iterator iterator = randomGaussianDistribution().iterator();
                 thresholds.put(grade.getDistribution().get(0), minPoints);    
                 
                 for (int i = 1, n = grade.getAmount(); i<n; i++)
@@ -96,19 +99,28 @@ public class Exam {
      * @param variance
      * @return 
      */
-    private TreeSet<Double> randomGaussianDistribution(Double mean, double variance)
-    {
-        double randomGaussian = 0;
-        TreeSet<Double> grades = new TreeSet<>();
+    private ArrayList<Double> randomGaussianDistribution()
+    {   
+        // Generate random values for gaussian distribution
+        double[] randomValues = new double[100];
         Random random = new Random();
-
-        while (grades.size() < grade.getAmount()-1)
+        for (int i=0;i<100;i++)
+            randomValues[i] = maxPoints*random.nextDouble();
+        
+        Mean mean = new Mean();
+        StandardDeviation sd = new StandardDeviation();
+        // Use mean & deviation from randomized values to generate thresholds
+        NormalDistribution normalDistribution = new NormalDistribution(mean.evaluate(randomValues),sd.evaluate(randomValues));
+        
+        double interval = rangeOfPoints/grade.getAmount(), iteration = minPoints;
+        ArrayList<Double> grades = new ArrayList<>();
+        
+        for (int i=0;i<grade.getAmount();i++, iteration+=interval)
         {
-            randomGaussian = roundToHalf(mean + random.nextGaussian() * variance);
-            if (randomGaussian > maxPoints*0.95)
-                grades.add(roundToHalf(maxPoints*0.95));
-            else if (randomGaussian > minPoints)
-                grades.add(randomGaussian);
+            double value = normalDistribution.cumulativeProbability(iteration) * maxPoints;
+            if (value < minPoints)
+                value = minPoints;
+            grades.add(roundToHalf(value));
         }
         return grades;
     }
@@ -159,45 +171,49 @@ public class Exam {
      * order by adjusting their points
      * 
      * @param grade
-     * @param points
+     * @param newPoints
      * @param previousPoints 
      */
-    public void setThreshold(double grade, double points, double previousPoints)
+    public void setThreshold(double grade, double newPoints, double previousPoints)
     {
-        if (points < minPoints)
-            points = minPoints;
-        else if (points > maxPoints)
-            points = maxPoints;
-        thresholds.replace(grade, points);
+        if (newPoints < minPoints)
+            newPoints = minPoints;
+        else if (newPoints > maxPoints)
+            newPoints = maxPoints;
+        thresholds.replace(grade, newPoints);
         // If the points were increased, check the above grades and increase
         // their points to the new threshold + 0.5
-        if (points > previousPoints)
+        if (newPoints > previousPoints)
         {
             Map<Double,Double> higherGrades = thresholds.tailMap(grade);
-            for (Map.Entry<Double, Double> t : higherGrades.entrySet())
+            for (Map.Entry<Double, Double> threshold : higherGrades.entrySet())
             {
-                if (t.getValue() <= points)
+                if (threshold.getValue() <= newPoints)
                 {
-                    t.setValue(points);
-                    if (points < maxPoints)
-                        points += 0.5;
+                    // Iterates the values of the tailMap
+                    // (From *Threshold being changed -> Last threshold)
+                    threshold.setValue(newPoints);
+                    if (newPoints < maxPoints)
+                        newPoints += 0.5;
                 }
             }
         }
         // If the points were lower than before check the grades below
-        else if (points < previousPoints)
+        else if (newPoints < previousPoints)
         {
             Map<Double,Double> lowerGrades = thresholds.headMap(grade);
-            // Amount of elements left to iterate
-            int i = lowerGrades.entrySet().size();
-            for (Map.Entry<Double, Double> t : lowerGrades.entrySet())
+            int amountOfThresholds = lowerGrades.entrySet().size();
+            for (Map.Entry<Double, Double> threshold : lowerGrades.entrySet())
             {
-                double newValue = points-(i--*0.5);
-                if (t.getValue() >= points)
+                // Iterates the values of the headMap
+                // (From First threshold -> *Threshold being changed)
+                // Lowers grade thresholds to be lower than the changed threshold
+                double newValue = newPoints-(amountOfThresholds--*0.5);
+                if (threshold.getValue() >= newPoints)
                 {
                     if (newValue < minPoints)
                         newValue = minPoints;
-                    t.setValue(newValue);
+                    threshold.setValue(newValue);
                 }
             }
         }

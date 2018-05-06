@@ -49,6 +49,10 @@ public class Grader {
     
     public void addResult(int id, double result)
     {
+        if (result < 0)
+            result = 0;
+        else if (result>maxPoints)
+            result = maxPoints;
         exam.getStudents().get(id).setPoints(result);
     }
     
