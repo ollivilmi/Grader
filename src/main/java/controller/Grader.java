@@ -104,7 +104,9 @@ public class Grader {
     
     public void peerDistribution()
     {
-        exam.setThresholds(new Statistic(exam).getSuggestedThresholds());
+        Statistic stats = new Statistic(exam);
+        if (!stats.getSuggestedThresholds().isEmpty())
+            exam.setThresholds(stats.getSuggestedThresholds());
     }
     
     public Exam getExam()
