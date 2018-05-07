@@ -71,11 +71,10 @@ public class Exam_Tests {
     
     @Test public void randomGaussianDistribution() {
         Grade grade = new Grade(0,5,0.5);
-        Random random = new Random();
         Exam exam;
-        for (int i = 0; i<100; i++)
+        for (int i = 0, j = 0; i<100; i++, j+=5)
         {
-            exam = new Exam(random.nextInt(300),random.nextInt(500),grade,2);
+            exam = new Exam(i,j,grade,2);
             assertNotNull(exam);
         }
     }
