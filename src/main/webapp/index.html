@@ -31,8 +31,16 @@
           <button class="title">Change configuration</button>
             <div class="fields">
               <fieldset id="config">
-                Min grade: <input class="number" type="number" step="0.5" id="gradeMin" value=1 min=0/> Max grade: <input class="number" type="number" step="0.5" id="gradeMax" value=5 min=0/> Grade interval: <input class="number" type="number" step="0.5"
-                  id="gradeInterval" value=0.5 /> Min points for exam: <input class="number" type="number" step="0.5" id="examMin" value=10 /> Max points for exam: <input class="number" type="number" step="0.5" id="examMax" value=30 /> Select preset
+                Min grade <input type="number" step="0.5" id="gradeMin" value=1 min=0/> 
+                Max grade <input type="number" step="0.5" id="gradeMax" value=5 min=0/> 
+                Grade interval <select id="gradeInterval">
+                                <option value=0.25>0.25</option>
+                                <option value=0.5 selected>0.5</option>
+                                <option value=1>1</option>
+                              </select>
+                Min points for exam <input type="number" step="0.5" id="examMin" value=10 /> 
+                Max points for exam <input type="number" step="0.5" id="examMax" value=30 /> 
+                Select preset
                 <select id="preset">
                 <option value=1>Equally spread</option>
                 <option value=2>Random gaussian distribution</option>
@@ -67,6 +75,8 @@
           </table>
           </fieldset>
 
+          <h2 align="center" id="flunkAmount"></h2>
+
           <h4>Statistics</h4>
           <table class="table">
             <thead class="thead">
@@ -74,13 +84,16 @@
               <th scope="col">Mean</th>
               <th scope="col">Median</th>
               <th scope="col">Deviation</th>
+              <th scope="col">Max</th>
+              <th scope="col">Min</th>
             </thead>
             <tbody id="statistics"></tbody>
           </table>
 
+          <h4>Results</h4>
           <div id="resultsGraph"></div>
 
-          <h4>Suggested distribution</h4>
+          <h4>Suggested distribution (by comparing results)</h4>
           <table class="table">
             <thead class="thead" id="bellCurveTable">
             </thead>

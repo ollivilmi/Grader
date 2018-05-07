@@ -58,7 +58,7 @@ body {
     flex-direction: column;
   }
   table {
-    font-size: 0.9em;
+    font-size: 0.8em;
   }
   .side {
     width: auto;
@@ -177,4 +177,12 @@ input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
+}
+
+h2 {
+  border: 1px solid grey;
+  background-color: black;
+  color: white;
+  width: 6em;
+  margin: 0 auto;
 }

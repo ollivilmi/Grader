@@ -122,10 +122,14 @@ $(document).ready(function() {
             $('#resultsGraph').html('&nbsp;');
             $('#resultsGraph').html('<canvas id="resultsCanvas"></canvas>');
             let ctx = document.getElementById('resultsCanvas').getContext('2d');
-            let examResults = [];
+            let examResults = []; let resultGradeArray = [];
             if (stats.value.gradeAmount !== null)
+            {
+                let addFails = ["F"];
+                resultGradeArray = addFails.concat(gradeArray);
                 examResults = Object.values(stats.value.gradeAmount);
-
+            }
+            
             // Builds a table of students
             // Student ID - Name - Points - Grade
             for (let student of stats.key)
@@ -137,7 +141,8 @@ $(document).ready(function() {
                 +'<td><button class="removeStudent">X</button></td></tr>';
             }
             $('#results').html(results);
-            createChart(resultsChart, ctx, gradeArray, examResults, "amount");
+            $('#flunkAmount').html(+stats.value.flunkAmount+" Flunks")
+            createChart(resultsChart, ctx, resultGradeArray, examResults, "amount");
 
             // Builds a table of statistics
             // Mean - Median - Deviation
@@ -194,7 +199,17 @@ $(document).ready(function() {
 
     // Creates a new Exam object with the configurations the user has set
     // - Creates new grade Thresholds from the settings
-    $('#getThresholds').click(updateConfig);
+    $('#getThresholds').click(function() {
+        if ($('#gradeMin').val() < 1)
+        {
+            $('#gradeMin').css("border", "1px solid red");
+        }
+        else
+        {
+            $('#gradeMin').css("border", "");
+            updateConfig();
+        }
+    });
 
     // User adds a student to the current session
     // - Adds student
