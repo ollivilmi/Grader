@@ -43,8 +43,8 @@
                 Select preset
                 <select id="preset">
                 <option value=1>Equally spread</option>
-                <option value=2>Random gaussian distribution</option>
                 <option value=3>Hard exam</option>
+                <option value=2>Medium exam</option>
                 <option value=4>Easy exam</option>
               </select>
                 <button id="getThresholds" class="btn">Update</button>
@@ -65,9 +65,9 @@
             <div class="modal-content">
               <span id="closeModal">&times;</span>
               <h1>How to use Grader</h1>
-              <h3>Choose configuration</h3>
+              <h3>Change configuration</h3>
               <ul>
-                <li>On the left aside, choose settings for the Exam to be graded.</li>
+                <li>Choose settings for the Exam to be graded.</li>
                 <li>Minimum grade must be set over 0 as it is used for flunk results.</li>
                 <li>Presets set the Thresholds for the grade and points you have chosen. These may be adjusted by opening the menu "Adjust thresholds".</li>
               </ul>
@@ -82,6 +82,11 @@
                 <li>The ID field must be unique. If you enter an ID that already exists, it overwrites the previous Student with that ID.</li>
                 <li>Name is not required.</li>
                 <li>Grader automatically updates when you set results, and analyzes them.</li>
+              </ul>
+              <h3>View results</h3>
+              <ul>
+                <li>Adjust student points. Automatically updates to corresponding grade.</li>
+                <li>View result statistics.</li>
               </ul>
               <h3>Suggested distribution</h3>
               <ul>

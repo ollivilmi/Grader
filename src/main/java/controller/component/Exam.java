@@ -262,13 +262,4 @@ public class Exam {
     {
         return students;
     }
-    
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<Double, Double> t : thresholds.entrySet())
-            sb.append(t.getKey()).append(" ").append(t.getValue());
-        return sb.toString();
-    }
 }
