@@ -11,7 +11,7 @@ import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
 public class Exam {
     private double minPoints, maxPoints, rangeOfPoints;
-    private int thresholdPreset;
+    private int thresholdPreset = 0;
     private Grade grade;
     private TreeMap<Double, Double> thresholds;
     private TreeMap<Integer, Student> students;
@@ -24,17 +24,27 @@ public class Exam {
     
     public void updateConfig(double min, double max, Grade grade, int preset)
     {
+        boolean gradeChanged = false;
         if (this.grade == null)
             this.grade = grade;
         else if (grade.compareTo(this.grade) == -1)
+        {
             this.grade = grade;
+            gradeChanged = true;
+        }
         
-        this.minPoints = min;
-        this.maxPoints = max;
-        this.thresholdPreset = preset;
         this.rangeOfPoints = max-min;
-        if (rangeOfPoints > 0)
+        
+        // Only generate Thresholds if configurations are changed
+        // (To avoid unnecessarily resetting them)
+        if (rangeOfPoints > 0 && preset != thresholdPreset || gradeChanged
+                || minPoints != min || maxPoints != max)
+        {
+            this.minPoints = min;
+            this.maxPoints = max;
+            this.thresholdPreset = preset;
             generateThresholds();
+        }
     }
 
     public void generateThresholds()
@@ -251,14 +261,5 @@ public class Exam {
     public TreeMap<Integer, Student> getStudents()
     {
         return students;
-    }
-    
-    @Override
-    public String toString()
-    {
-        StringBuilder sb = new StringBuilder();
-        for (Map.Entry<Double, Double> t : thresholds.entrySet())
-            sb.append(t.getKey()).append(" ").append(t.getValue());
-        return sb.toString();
     }
 }

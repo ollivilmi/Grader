@@ -125,4 +125,18 @@ public class GraderResources {
         if (grader != null)
             grader.addResult(studentId, studentResult);
     }
+    
+    @RequestMapping("/peerDistribution")
+    public void peerDistribution(HttpSession session)
+    {
+        Grader grader = (Grader) session.getAttribute("Grader");
+        if (grader != null)
+            grader.peerDistribution();
+    }
+    
+    @RequestMapping("/resetConfig")
+    public void resetConfig(HttpSession session)
+    {
+        session.invalidate();
+    }
 }

@@ -9,11 +9,15 @@ import java.util.TreeMap;
 import org.apache.commons.math3.distribution.NormalDistribution;
 import org.apache.commons.math3.stat.descriptive.moment.Mean;
 import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
+import org.apache.commons.math3.stat.descriptive.rank.Max;
 import org.apache.commons.math3.stat.descriptive.rank.Median;
+import org.apache.commons.math3.stat.descriptive.rank.Min;
 
 public class Statistic {
     private List<Double> pointStats, gradeStats, suggestedPoints;
     private TreeMap<Double,Double> suggestedThresholds;
+    private TreeMap<Double,Integer> gradeAmount;
+    private int flunkAmount;
     
     /***
      * Analyzes results from the Exam object.
@@ -41,11 +45,15 @@ public class Statistic {
         // Reverse map to access Thresholds by Point -> Grade
         // - Checks & sets the grade for a student
         TreeMap<Double, Double> examThresholds = exam.getReverseMap();
+        gradeAmount = new TreeMap<>();
+        for (Double grade : exam.getGrade().getDistribution())
+            gradeAmount.put(grade, 0);
         
         // numberOfStudents = saves value to array (allGrades, allPoints)
         // mostPoints = best result of points in exam
         // leastPoints = worst result of points in exam
-        int numberOfStudents = 0; double mostPoints = 0, leastPoints = 0;
+        int numberOfStudents = 0; flunkAmount = 0;
+        
         
         for (Map.Entry<Integer,Student> entry : students.entrySet())
         {
@@ -55,12 +63,10 @@ public class Statistic {
             if (pointsFromExam > examThresholds.firstKey())
                 gradeFromExam = examThresholds.floorEntry(pointsFromExam).getValue();
             else
+            {
                 gradeFromExam = 0.0;
-            
-            if (pointsFromExam > mostPoints)
-                mostPoints = pointsFromExam;
-            if (pointsFromExam < leastPoints)
-                leastPoints = pointsFromExam;
+                flunkAmount++;
+            }
             
             student.setPoints(pointsFromExam);
             student.setGrade(gradeFromExam);
@@ -68,6 +74,8 @@ public class Statistic {
             allPoints[numberOfStudents] = pointsFromExam;
             allGrades[numberOfStudents] = gradeFromExam;
             numberOfStudents++;
+
+            gradeAmount.merge(gradeFromExam, 1, Integer::sum);  
         }
         
         pointStats = new ArrayList<>();
@@ -123,6 +131,14 @@ public class Statistic {
             
             suggestedPoints.addAll(suggestedThresholds.values());
         }
+        
+        Max max = new Max();
+        pointStats.add(max.evaluate(allPoints));
+        gradeStats.add(max.evaluate(allGrades));
+        
+        Min min = new Min();
+        pointStats.add(min.evaluate(allPoints));
+        gradeStats.add(min.evaluate(allGrades));
     }
     
     /***
@@ -161,4 +177,13 @@ public class Statistic {
         return suggestedPoints;
     }
     
+    public TreeMap<Double,Integer> getGradeAmount()
+    {
+        return gradeAmount;
+    }
+    
+    public int getFlunkAmount()
+    {
+        return flunkAmount;
+    }
 }

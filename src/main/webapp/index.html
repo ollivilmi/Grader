@@ -7,6 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="scripts.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -16,38 +17,90 @@
   <div class="container">
     <div class="header">
       <h1>GRADER</h1>
-      <p>Setting up the student grades</p>
     </div>
 
     <div class="navbar">
       <button class="button" onclick="showResults()">View results</button>
       <button class="button" onclick="showThresholds()">Adjust thresholds</button>
-      <button class="button" id="reset">RESET</button>
+      <button class="button" id="reset">Reset</button>
     </div>
 
     <div class="row">
       <div class="side">
         <div class="btn-group">
-          <button class="button">Change configuration</button>
+          <button class="title">Change configuration</button>
             <div class="fields">
               <fieldset id="config">
-                Min grade: <input class="number" type="number" step="0.5" id="gradeMin" value=0 min=0/> Max grade: <input class="number" type="number" step="0.5" id="gradeMax" value=5 min=0/> Grade interval: <input class="number" type="number" step="0.5"
-                  id="gradeInterval" value=0.5 /> Min points for exam: <input class="number" type="number" step="0.5" id="examMin" value=0 /> Max points for exam: <input class="number" type="number" step="0.5" id="examMax" value=30 /> Select preset
+                Min grade <input type="number" step="0.5" id="gradeMin" value=1 min=0/> 
+                Max grade <input type="number" step="0.5" id="gradeMax" value=5 min=0/> 
+                Grade interval <select id="gradeInterval">
+                                <option value=0.25>0.25</option>
+                                <option value=0.5 selected>0.5</option>
+                                <option value=1>1</option>
+                              </select>
+                Min points for exam <input type="number" step="0.5" id="examMin" value=10 /> 
+                Max points for exam <input type="number" step="0.5" id="examMax" value=30 /> 
+                Select preset
                 <select id="preset">
                 <option value=1>Equally spread</option>
-                <option value=2>Random gaussian distribution</option>
                 <option value=3>Hard exam</option>
+                <option value=2>Medium exam</option>
                 <option value=4>Easy exam</option>
               </select>
                 <button id="getThresholds" class="btn">Update</button>
               </fieldset>
             </div>
-          <button class="button">Add students</button>
+          <button class="title">Add students</button>
           <div class="fields">
             <fieldset>
-              Student ID: <input class="number" type="number" step="1" id="studentId" placeholder="integer" /> Student name: <input class="number" type="text" id="studentName" placeholder="not required" />
+              Student ID: <input class="number" type="number" min=1 value=1 step="1" id="studentId" placeholder="integer" /> Student name: <input class="number" type="text" id="studentName" placeholder="not required" />
               <button id="addStudent" class="btn btn-default">Add</button>
             </fieldset>
+          </div>
+
+          <button id="helpButton" class="btn">Help</button>
+
+          <div id="helpModal" class="modal">
+
+            <div class="modal-content">
+              <span id="closeModal">&times;</span>
+              <h1>How to use Grader</h1>
+              <h3>Change configuration</h3>
+              <ul>
+                <li>Choose settings for the Exam to be graded.</li>
+                <li>Minimum grade must be set over 0 as it is used for flunk results.</li>
+                <li>Presets set the Thresholds for the grade and points you have chosen. These may be adjusted by opening the menu "Adjust thresholds".</li>
+              </ul>
+              <h3>Adjust Thresholds</h3>
+              <ul>
+                <li>You may adjust thresholds by point or percentage. Whenever you finish the input, Grader automatically updates.</li>
+                <li>Percentage correlates to the % of the maximum possible points in the exam.</li>
+              </ul>
+              <h3>Add students</h3>
+              <ul>
+                <li>You may add students by pressing the Add button.</li>
+                <li>The ID field must be unique. If you enter an ID that already exists, it overwrites the previous Student with that ID.</li>
+                <li>Name is not required.</li>
+                <li>Grader automatically updates when you set results, and analyzes them.</li>
+              </ul>
+              <h3>View results</h3>
+              <ul>
+                <li>Adjust student points. Automatically updates to corresponding grade.</li>
+                <li>View result statistics.</li>
+              </ul>
+              <h3>Suggested distribution</h3>
+              <ul>
+                <li>In some cases, you may want to set the thresholds based on the results.</li>
+                <li>The suggested distribution analyzes the results and suggests a redistribution. (Grading on a curve) </li>
+                <li>You may use this or update the preset to change thresholds at any time during the use of the application.</li>
+              </ul>
+              <h3>Reset</h3>
+              <ul>
+                <li>Reset clears your current session, and refreshes the page with default configurations.</li>
+                <li>This also removes all the current students.</li>
+              </ul>
+            </div>
+
           </div>
         </div>
       </div>
@@ -67,6 +120,8 @@
           </table>
           </fieldset>
 
+          <h2 align="center" id="flunkAmount"></h2>
+
           <h4>Statistics</h4>
           <table class="table">
             <thead class="thead">
@@ -74,9 +129,23 @@
               <th scope="col">Mean</th>
               <th scope="col">Median</th>
               <th scope="col">Deviation</th>
+              <th scope="col">Max</th>
+              <th scope="col">Min</th>
             </thead>
             <tbody id="statistics"></tbody>
           </table>
+
+          <h4>Results</h4>
+          <div id="resultsGraph"></div>
+
+          <h4>Suggested distribution (by comparing results)</h4>
+          <table class="table">
+            <thead class="thead" id="bellCurveTable">
+            </thead>
+            <tbody id="bellCurvePoints"></tbody>
+          </table>
+          <button id="peerDistribution" class="button">Redistribute</button>
+          
         <div>
         </div>
       </div>
@@ -91,13 +160,7 @@
             <tbody id="gradeTable"></tbody>
           </table>
 
-          <h4>Suggested redistribution</h4>
-          <table class="table">
-            <thead class="thead" id="bellCurveTable">
-            </thead>
-            <tbody id="bellCurvePoints"></tbody>
-          </table>
-          <button id="peerDistribution" class="button">Redistribute</button>
+          <div id="thresholdsGraph"></div>
 
         </div>
       </div>
