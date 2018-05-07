@@ -26,7 +26,8 @@ $(document).ready(function() {
         +"&examMin="+$('#examMin').val()+"&examMax="+$('#examMax').val()+"&preset="+$('#preset').val();
         interval = $('#gradeInterval').val();
 
-        $.getJSON(updateSession).always(updateThresholds("/getThresholds"));
+        $.getJSON(updateSession).always(function() {
+            updateThresholds("/getThresholds")});
     }
 
     // Updates the Thresholds of Points - Grade
@@ -107,6 +108,8 @@ $(document).ready(function() {
     {
         $.getJSON("/addStudent?studentId="+$('#studentId').val()+"&studentName="+$('#studentName').val())
         .always(getResults);
+        // Increment id by one for ease of use
+        $('#studentId').val(+$('#studentId').val() +1);
         return false;
     }
 
@@ -180,7 +183,7 @@ $(document).ready(function() {
 
     function peerDistribution()
     {
-        $.getJSON("/peerDistribution").always(getResults);
+        $.getJSON("/peerDistribution").always(updateThresholds("/getThresholds"));
         return false;
     }
 

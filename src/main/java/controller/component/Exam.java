@@ -24,16 +24,24 @@ public class Exam {
     
     public void updateConfig(double min, double max, Grade grade, int preset)
     {
+        boolean gradeChanged = false;
         if (this.grade == null)
             this.grade = grade;
         else if (grade.compareTo(this.grade) == -1)
-            this.grade = grade;
-        
-        this.minPoints = min;
-        this.maxPoints = max;
-        this.rangeOfPoints = max-min;
-        if (rangeOfPoints > 0 && preset != thresholdPreset)
         {
+            this.grade = grade;
+            gradeChanged = true;
+        }
+        
+        this.rangeOfPoints = max-min;
+        
+        // Only generate Thresholds if configurations are changed
+        // (To avoid unnecessarily resetting them)
+        if (rangeOfPoints > 0 && preset != thresholdPreset || gradeChanged
+                || minPoints != min || maxPoints != max)
+        {
+            this.minPoints = min;
+            this.maxPoints = max;
             this.thresholdPreset = preset;
             generateThresholds();
         }
