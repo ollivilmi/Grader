@@ -133,4 +133,10 @@ public class GraderResources {
         if (grader != null)
             grader.peerDistribution();
     }
+    
+    @RequestMapping("/resetConfig")
+    public void resetConfig(HttpSession session)
+    {
+        session.invalidate();
+    }
 }

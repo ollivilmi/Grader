@@ -31,8 +31,8 @@
           <button class="title">Change configuration</button>
             <div class="fields">
               <fieldset id="config">
-                Min grade: <input class="number" type="number" step="0.5" id="gradeMin" value=0 min=0/> Max grade: <input class="number" type="number" step="0.5" id="gradeMax" value=5 min=0/> Grade interval: <input class="number" type="number" step="0.5"
-                  id="gradeInterval" value=0.5 /> Min points for exam: <input class="number" type="number" step="0.5" id="examMin" value=0 /> Max points for exam: <input class="number" type="number" step="0.5" id="examMax" value=30 /> Select preset
+                Min grade: <input class="number" type="number" step="0.5" id="gradeMin" value=1 min=0/> Max grade: <input class="number" type="number" step="0.5" id="gradeMax" value=5 min=0/> Grade interval: <input class="number" type="number" step="0.5"
+                  id="gradeInterval" value=0.5 /> Min points for exam: <input class="number" type="number" step="0.5" id="examMin" value=10 /> Max points for exam: <input class="number" type="number" step="0.5" id="examMax" value=30 /> Select preset
                 <select id="preset">
                 <option value=1>Equally spread</option>
                 <option value=2>Random gaussian distribution</option>
@@ -45,7 +45,7 @@
           <button class="title">Add students</button>
           <div class="fields">
             <fieldset>
-              Student ID: <input class="number" type="number" step="1" id="studentId" placeholder="integer" /> Student name: <input class="number" type="text" id="studentName" placeholder="not required" />
+              Student ID: <input class="number" type="number" min=1 value=1 step="1" id="studentId" placeholder="integer" /> Student name: <input class="number" type="text" id="studentName" placeholder="not required" />
               <button id="addStudent" class="btn btn-default">Add</button>
             </fieldset>
           </div>

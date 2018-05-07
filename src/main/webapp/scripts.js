@@ -54,8 +54,8 @@ $(document).ready(function() {
                     gradeArray.push(g.grade);
                     pointsArray.push(g.points);
                     gradeTable += "<tr><th scope='row'>"+g.grade+"</th>"
-                    +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"' max='"+$('#examMax').val()+"' min='"+$('#examMin').val()+"'/></td>"
-                    +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"' min=0 max=100/>%</td></tr>";
+                    +"<td><input type='number' step='0.5' class='points number narrow' value='"+g.points+"' max='"+$('#examMax').val()+"' min='"+$('#examMin').val()+"'/></td>"
+                    +"<td><input type='number' step='0.5' class='percentages number narrow' value='"+Math.round(g.percentage*100)+"' min=0 max=100/>%</td></tr>";
                     bellCurveTable += '<th scope="col" class="grade">'+g.grade+'</th>';
                 }
                 $('#gradeTable').html(gradeTable);
@@ -132,7 +132,7 @@ $(document).ready(function() {
             {
                 results += '<tr><td>'+student.id+'</td>'
                 +'<td>'+student.name+'</td>'
-                +'<td><input type="number" step="0.5" class="studentResults number" value="'+student.points+'" max="'+$('#examMax').val()+'" min=0 /></td>'
+                +'<td><input type="number" step="0.5" class="studentResults number narrow" value="'+student.points+'" max="'+$('#examMax').val()+'" min=0 /></td>'
                 +'<td>'+student.grade+'</td>'
                 +'<td><button class="removeStudent">X</button></td></tr>';
             }
@@ -158,7 +158,7 @@ $(document).ready(function() {
 
                 results = "<tr><th scope='row'>Points</th>";
                 for(let stat of stats.value.suggestedPoints)
-                    results += '<td><input readonly type="number" step="1" class="suggestedPoints number" value="'+stat+'" max="'+$('#examMax').val()+'" min=0 /></td>'
+                    results += '<td><p class="suggestedPoints number">'+stat+'</p></td>'
                 results += '</tr>'
                 $('#bellCurvePoints').html(results);
             }
@@ -187,6 +187,10 @@ $(document).ready(function() {
         return false;
     }
 
+    function resetSession()
+    {
+        $.getJSON("/resetConfig").always(location.reload());
+    }
 
     // Creates a new Exam object with the configurations the user has set
     // - Creates new grade Thresholds from the settings
@@ -197,7 +201,10 @@ $(document).ready(function() {
     // - Refreshes student results
     $('#addStudent').click(addStudent);
 
-    $('#peerDistribution').click(peerDistribution);           
+    // Uses recommended redistribution to distribute grades
+    $('#peerDistribution').click(peerDistribution);
+
+    $('#reset').click(resetSession);
 });
 
 

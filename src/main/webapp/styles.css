@@ -50,19 +50,29 @@ body {
 
 .main {
   width: 79%;
-  padding: 2em 2em;
+  padding: 2em 5em;
 }
 
 @media screen and (max-width: 1300px) {
   .row {
     flex-direction: column;
   }
+  table {
+    font-size: 0.9em;
+  }
+  .side {
+    width: auto;
+    margin: 0 auto;
+  }
+  .main {
+    width: 100%;
+    margin: 0 auto;
+  }
 }
 
-@media screen and (max-width: 400px) {
-  .navbar a {
-    float: none;
-    width: 100%;
+@media screen and (max-width: 600px) {
+  .container {
+    min-width: 600px;
   }
 }
 
@@ -151,10 +161,20 @@ th {
   color: white;
 }
 
+.narrow {
+  max-width: 3em;
+}
+
 input:hover {
   background-color: lightgrey;
 }
 
 input:focus {
   background-color: lightgrey;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
 }
