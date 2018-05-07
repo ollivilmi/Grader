@@ -1,5 +1,8 @@
 $(document).ready(function() {
 
+    var gradeArray = [], gradeInterval;
+    var resultsChart, gradesChart;
+
     // Loads exam configuration information from Session
     // if it exists
     $.getJSON("/loadSession", function(grader){
@@ -21,6 +24,7 @@ $(document).ready(function() {
         let updateSession = "/updateSession?gradeMin="+$('#gradeMin').val()
         +"&gradeMax="+$('#gradeMax').val()+"&gradeInterval="+$('#gradeInterval').val()
         +"&examMin="+$('#examMin').val()+"&examMax="+$('#examMax').val()+"&preset="+$('#preset').val();
+        interval = $('#gradeInterval').val();
 
         $.getJSON(updateSession).always(updateThresholds("/getThresholds"));
     }
@@ -38,13 +42,16 @@ $(document).ready(function() {
         $.getJSON(url, function(thresholds)
         {
             let gradeTable = "", bellCurveTable = '<th scope="col">Grade</th>';
-            let ctx = document.getElementById('thresholdsGraph').getContext('2d');
-            let grades = [], points = [];
+            $('#thresholdsGraph').html('&nbsp;');
+            $('#thresholdsGraph').html('<canvas id="thresholdsCanvas"></canvas>');
+            let ctx = document.getElementById('thresholdsCanvas').getContext('2d');
+
+            gradeArray = []; let pointsArray = [];
 
                 for (let g of thresholds)
                 {
-                    grades.push(g.grade);
-                    points.push(g.points);
+                    gradeArray.push(g.grade);
+                    pointsArray.push(g.points);
                     gradeTable += "<tr><th scope='row'>"+g.grade+"</th>"
                     +"<td><input type='number' step='0.5' class='points number' value='"+g.points+"' max='"+$('#examMax').val()+"' min='"+$('#examMin').val()+"'/></td>"
                     +"<td><input type='number' step='0.5' class='percentages number' value='"+Math.round(g.percentage*100)+"' min=0 max=100/>%</td></tr>";
@@ -52,7 +59,7 @@ $(document).ready(function() {
                 }
                 $('#gradeTable').html(gradeTable);
                 $('#bellCurveTable').html(bellCurveTable);
-                createChart(ctx, grades, points);
+                createChart(gradesChart, ctx, gradeArray, pointsArray, "points");
                 updateListeners();
         }).always(getResults);
     }
@@ -75,27 +82,22 @@ $(document).ready(function() {
         });
     }
     
-    function createChart(ctx, grades, points)
+    function createChart(chart, ctx, grades, results, resultsString)
     {
-        let chart = new Chart(ctx,{
+        if (chart != null)
+            chart.destroy();
+
+        chart = new Chart(ctx,{
             type: 'bar',
             data: {
                 labels: grades,
                 datasets: [{
-                    label: "points",
-                    fill: false,
+                    label: resultsString,
                     borderColor: 'rgb(0,0,0)',
-                    data: points
+                    borderWidth: 1,
+                    data: results
                 }]
             },
-            options: {
-                scales:
-                {
-                    xAxes: [{
-                        display: false
-                    }]
-                }
-            }
         });
     }
 
@@ -114,7 +116,12 @@ $(document).ready(function() {
         $.getJSON("/getResults", function(stats)
         {
             let results = "";
-            let points = [];
+            $('#resultsGraph').html('&nbsp;');
+            $('#resultsGraph').html('<canvas id="resultsCanvas"></canvas>');
+            let ctx = document.getElementById('resultsCanvas').getContext('2d');
+            let examResults = [];
+            if (stats.value.gradeAmount !== null)
+                examResults = Object.values(stats.value.gradeAmount);
 
             // Builds a table of students
             // Student ID - Name - Points - Grade
@@ -127,6 +134,7 @@ $(document).ready(function() {
                 +'<td><button class="removeStudent">X</button></td></tr>';
             }
             $('#results').html(results);
+            createChart(resultsChart, ctx, gradeArray, examResults, "amount");
 
             // Builds a table of statistics
             // Mean - Median - Deviation
@@ -147,7 +155,7 @@ $(document).ready(function() {
 
                 results = "<tr><th scope='row'>Points</th>";
                 for(let stat of stats.value.suggestedPoints)
-                    results += '<td><input type="number" step="1" class="suggestedPoints number" value="'+stat+'" max="'+$('#examMax').val()+'" min=0 /></td>'
+                    results += '<td><input readonly type="number" step="1" class="suggestedPoints number" value="'+stat+'" max="'+$('#examMax').val()+'" min=0 /></td>'
                 results += '</tr>'
                 $('#bellCurvePoints').html(results);
             }
@@ -172,14 +180,10 @@ $(document).ready(function() {
 
     function peerDistribution()
     {
-        let grades = $('.grade'); let i = 0;
-        for (let point of $('.suggestedPoints'))
-        {
-            let url = "/setByPoints?grade="+grades[i++].innerHTML+"&points="+point.value;
-            updateThresholds(url); 
-        }
+        $.getJSON("/peerDistribution").always(getResults);
         return false;
     }
+
 
     // Creates a new Exam object with the configurations the user has set
     // - Creates new grade Thresholds from the settings
@@ -190,16 +194,16 @@ $(document).ready(function() {
     // - Refreshes student results
     $('#addStudent').click(addStudent);
 
-    $('#peerDistribution').click(peerDistribution);
+    $('#peerDistribution').click(peerDistribution);           
 });
 
-function showResults() {
-  $('#resultsContainer').css("display", "block");
-  $('#thresholdsContainer').css("display", "none");
-}
 
+function showResults() {
+    $('#resultsContainer').css("display", "block");
+    $('#thresholdsContainer').css("display", "none");
+  }
+  
 function showThresholds() {
     $('#resultsContainer').css("display", "none");
     $('#thresholdsContainer').css("display", "block");
 }
-

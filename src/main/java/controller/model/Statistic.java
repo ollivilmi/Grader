@@ -14,6 +14,7 @@ import org.apache.commons.math3.stat.descriptive.rank.Median;
 public class Statistic {
     private List<Double> pointStats, gradeStats, suggestedPoints;
     private TreeMap<Double,Double> suggestedThresholds;
+    private TreeMap<Double,Integer> gradeAmount;
     
     /***
      * Analyzes results from the Exam object.
@@ -41,6 +42,9 @@ public class Statistic {
         // Reverse map to access Thresholds by Point -> Grade
         // - Checks & sets the grade for a student
         TreeMap<Double, Double> examThresholds = exam.getReverseMap();
+        gradeAmount = new TreeMap<>();
+        for (Double grade : exam.getGrade().getDistribution())
+            gradeAmount.put(grade, 0);
         
         // numberOfStudents = saves value to array (allGrades, allPoints)
         // mostPoints = best result of points in exam
@@ -68,6 +72,8 @@ public class Statistic {
             allPoints[numberOfStudents] = pointsFromExam;
             allGrades[numberOfStudents] = gradeFromExam;
             numberOfStudents++;
+
+            gradeAmount.merge(gradeFromExam, 1, Integer::sum);  
         }
         
         pointStats = new ArrayList<>();
@@ -161,4 +167,8 @@ public class Statistic {
         return suggestedPoints;
     }
     
+    public TreeMap<Double,Integer> getGradeAmount()
+    {
+        return gradeAmount;
+    }
 }

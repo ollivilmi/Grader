@@ -11,7 +11,7 @@ import org.apache.commons.math3.stat.descriptive.moment.StandardDeviation;
 
 public class Exam {
     private double minPoints, maxPoints, rangeOfPoints;
-    private int thresholdPreset;
+    private int thresholdPreset = 0;
     private Grade grade;
     private TreeMap<Double, Double> thresholds;
     private TreeMap<Integer, Student> students;
@@ -31,10 +31,12 @@ public class Exam {
         
         this.minPoints = min;
         this.maxPoints = max;
-        this.thresholdPreset = preset;
         this.rangeOfPoints = max-min;
-        if (rangeOfPoints > 0)
+        if (rangeOfPoints > 0 && preset != thresholdPreset)
+        {
+            this.thresholdPreset = preset;
             generateThresholds();
+        }
     }
 
     public void generateThresholds()

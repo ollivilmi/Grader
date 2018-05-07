@@ -95,12 +95,16 @@ public class Grader {
         exam.setThreshold(grade, points, previousPoints);
     }
     
-    // Change by points
     public void setByPoints(double grade, double points)
     {
         double previousPoints = exam.getThresholds().ceilingEntry(grade).getValue();
         points = Math.round(points * 2) / 2.0;
         exam.setThreshold(grade, points, previousPoints);
+    }
+    
+    public void peerDistribution()
+    {
+        exam.setThresholds(new Statistic(exam).getSuggestedThresholds());
     }
     
     public Exam getExam()
