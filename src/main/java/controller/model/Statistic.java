@@ -62,11 +62,13 @@ public class Statistic {
             
             if (pointsFromExam > examThresholds.firstKey())
                 gradeFromExam = examThresholds.floorEntry(pointsFromExam).getValue();
-            else
+            else if (pointsFromExam < examThresholds.firstKey())
             {
                 gradeFromExam = 0.0;
                 flunkAmount++;
             }
+            else
+                gradeFromExam = 1.0;
             
             student.setPoints(pointsFromExam);
             student.setGrade(gradeFromExam);

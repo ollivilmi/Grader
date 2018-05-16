@@ -127,7 +127,14 @@ $(document).ready(function() {
             {
                 let addFails = ["F"];
                 resultGradeArray = addFails.concat(gradeArray);
-                examResults = Object.values(stats.value.gradeAmount);
+
+                if (stats.value.gradeAmount["0.0"] != null)
+                    examResults = Object.values(stats.value.gradeAmount);
+                else 
+                {
+                    let addFails = [{"0.0":0}];
+                    examResults = addFails.concat(Object.values(stats.value.gradeAmount));
+                }
             }
             
             // Builds a table of students
