@@ -1,5 +1,6 @@
 # Grader
 Grading tool for teachers (Metropolia Software Structures &amp; Models)
+**Currently only supported by google chrome**, recommended window width over 880px.
 
 https://graderapp.herokuapp.com/
 
