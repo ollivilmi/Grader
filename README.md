@@ -35,10 +35,13 @@ Libraries used
 Changing configurations automatically send JSON requests without the user having to send a button.
 loadSession()
 > Loads configuration
+
 getResults()
 > Gets results based on thresholds & students
+
 getThresholds()
 > Gets thresholds currently in the Exam object
+
 updateThresholds()
 > The exam configuration has been updated, updates the threshold TreeMap
 
