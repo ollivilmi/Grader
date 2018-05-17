@@ -33,17 +33,25 @@ Libraries used
 - Jquery
 - [Charts.js](https://www.chartjs.org/)
 Changing configurations automatically send JSON requests without the user having to send a button.
-loadSession()
-> Loads configuration
 
-getResults()
-> Gets results based on thresholds & students
+#### Most important functions
+`updateConfig()`
+> Updates session object with new configuration
 
-getThresholds()
-> Gets thresholds currently in the Exam object
+`getResults()`
+> Gets results based on thresholds & students, builds tables and a graph. Called when something changes the results.
 
-updateThresholds()
+`getThresholds()`
+> Gets thresholds currently in the Exam object, builds table and a graph
+
+`updateThresholds()`
 > The exam configuration has been updated, updates the threshold TreeMap
 
-So normal flow of the program
-loadSession() -> getThresholds() -> getResults()...
+`addStudent()`
+> Adds student
+
+`peerDistribution()`
+> Calls suggested distribution method in Grader, then updates thresholds.
+
+`resetSession()`
+> Resets the current session object to default values.
