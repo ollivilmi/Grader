@@ -12,12 +12,18 @@ import controller.component.Student;
 import controller.model.Threshold;
 import java.util.ArrayList;
 import org.apache.commons.math3.util.Pair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class GraderResources {
+    
+    @Autowired
+    private UserRepository userRepository;
 
     // Gets the grade thresholds currently in the Grader object
     @RequestMapping("/getThresholds")
@@ -138,5 +144,21 @@ public class GraderResources {
     public void resetConfig(HttpSession session)
     {
         session.invalidate();
+    }
+    
+    @GetMapping(path="/add")
+    public @ResponseBody String addNewUser (@RequestParam String name
+                    , @RequestParam String hash) {
+
+            GraderUser n = new GraderUser();
+            n.setUsername(name);
+            n.setPasswordHash(hash);
+            userRepository.save(n);
+            return "Saved";
+    }
+
+    @GetMapping(path="/all")
+    public @ResponseBody Iterable<GraderUser> getAllUsers() {
+            return userRepository.findAll();
     }
 }
