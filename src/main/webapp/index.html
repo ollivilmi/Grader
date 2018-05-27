@@ -7,6 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="scripts.js"></script>
+    <script src="scripts_static.js"></script>
+    <script src="scripts_login.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,6 +22,7 @@
     </div>
 
     <div class="navbar">
+      <button class="button" id="loginButton">Login</button>
       <button class="button" onclick="showResults()">View results</button>
       <button class="button" onclick="showThresholds()">Adjust thresholds</button>
       <button class="button" id="reset">Reset</button>
@@ -63,7 +66,6 @@
           <div id="helpModal" class="modal">
 
             <div class="modal-content">
-              <span id="closeModal">&times;</span>
               <h1>How to use Grader</h1>
               <h3>Change configuration</h3>
               <ul>
@@ -102,6 +104,27 @@
             </div>
 
           </div>
+
+          <div id="loginModal" class="modal">
+
+            <div class="modal-content">
+              <h3>Log in</h3>
+              <form id="loginForm">
+                <input type="text" name="username" placeholder="username"/>
+                <input type="password" name="hash" placeholder="password"/>
+                <input type="submit" value="Submit"/>
+              </form>
+
+              <button id="openRegister">Register</button>
+                <form id="registerForm" style="display:none">
+                    <input type="text" name="username" placeholder="name"/>
+                    <input type="password" name="password" placeholder="password"/>
+                    <input type="submit" value="Register"/>
+                </form>
+            </div>
+
+          </div>
+          
         </div>
       </div>
 
