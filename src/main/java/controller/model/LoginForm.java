@@ -1,6 +1,6 @@
-package service;
+package controller.model;
 
-class LoginForm {
+public class LoginForm {
     private String username, password;
     
     public LoginForm(String username, String password)

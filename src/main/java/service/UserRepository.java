@@ -1,5 +1,6 @@
 package service;
 
+import service.GraderUser;
 import java.util.List;
 import org.springframework.data.repository.CrudRepository;
 
