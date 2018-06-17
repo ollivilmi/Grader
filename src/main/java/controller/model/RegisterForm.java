@@ -1,9 +1,9 @@
 package controller.model;
 
-public class LoginForm {
+public class RegisterForm {
     private String username, password;
     
-    public LoginForm(String username, String password)
+    public RegisterForm(String username, String password)
     {
         this.username = username;
         this.password = password;

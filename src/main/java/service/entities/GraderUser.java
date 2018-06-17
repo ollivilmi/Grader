@@ -1,4 +1,4 @@
-package service;
+package service.entities;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +12,7 @@ public class GraderUser {
     private long id;
     private String username;
     private String passwordHash;
+    private String role;
     
     protected GraderUser() {}
     
@@ -19,6 +20,7 @@ public class GraderUser {
     {
         this.username = username;
         this.passwordHash = passwordHash;
+        this.role = "ROLE_USER";
     }
     
     public void setUsername(String username)
@@ -26,11 +28,21 @@ public class GraderUser {
         this.username = username;
     }
     
+    public String getRole()
+    {
+        return role;
+    }
+    
+    public void setRole(String role)
+    {
+        this.role = role;
+    }
+
     public String getUsername()
     {
         return username;
     }
-    
+
     public void setPasswordHash(String passwordHash)
     {
         this.passwordHash = passwordHash;

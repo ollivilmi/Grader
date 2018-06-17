@@ -1,39 +1,34 @@
 package service.security;
 
-import controller.model.LoginForm;
+import controller.model.RegisterForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.mindrot.jbcrypt.BCrypt;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
-import service.GraderUser;
-import service.UserRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import service.entities.GraderUser;
+import service.entities.UserRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
-public class Authorization {
+public class Authorization implements AuthenticationProvider {
     
     @Autowired
     private UserRepository userRepository;
     
-    private static final Logger log = LoggerFactory.getLogger(Authorization.class);
-    
-    public boolean login(LoginForm loginForm)
+    public boolean register(RegisterForm form)
     {
-        try {
-            GraderUser user = userRepository.findByUsername(loginForm.getUsername()).get(0);  
-            return BCrypt.checkpw(loginForm.getPassword(), user.getPasswordHash());
-        }
-        catch (Exception e)
+        try
         {
-            return false;
-        }
-    }
-    
-    public boolean register(LoginForm loginForm)
-    {
-        try {
-            String username = loginForm.getUsername();
-            String hash = BCrypt.hashpw(loginForm.getPassword(), BCrypt.gensalt());
+            String username = form.getUsername();
+            String hash = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
             userRepository.save(new GraderUser(username, hash));
             return true;
         }
@@ -41,5 +36,25 @@ public class Authorization {
         {
             return false;
         }
+    }
+
+    @Override
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+
+        GraderUser user = userRepository.findByUsername(authentication.getName());
+        if (!BCrypt.checkpw(authentication.getCredentials().toString(), user.getPasswordHash()))
+            throw new BadCredentialsException("Authentication failed for " + authentication.getName());
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole()));
+
+        Authentication auth = new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPasswordHash(), authorities);
+
+        return auth;
+    }
+
+    @Override
+    public boolean supports(Class<?> authentication) {
+        return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 }

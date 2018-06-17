@@ -1,7 +1,7 @@
 package service;
 
+import controller.model.RegisterForm;
 import service.security.Authorization;
-import controller.model.LoginForm;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import service.entities.GraderUser;
+import service.entities.UserRepository;
 
 @RestController
 public class GraderResources {
@@ -31,6 +33,7 @@ public class GraderResources {
     // Database
     @Autowired
     private UserRepository userRepository;
+
     // Login / Register service
     @Autowired
     private Authorization auth;
@@ -157,17 +160,10 @@ public class GraderResources {
     }
     
     @PostMapping(path="/register")
-    public ResponseEntity register(@RequestBody LoginForm loginForm){
-        if (auth.register(loginForm))
+    public ResponseEntity register(@RequestBody RegisterForm form){
+        if (auth.register(form))
             return ResponseEntity.ok(HttpStatus.OK);
         else return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
-    }
-    
-    @PostMapping(path="/login")
-    public ResponseEntity login(@RequestBody LoginForm loginForm) {
-        if (auth.login(loginForm))
-            return ResponseEntity.ok(HttpStatus.OK);
-        else return ResponseEntity.ok(HttpStatus.UNAUTHORIZED);
     }
 
     @GetMapping(path="/all")
