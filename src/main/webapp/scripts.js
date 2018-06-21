@@ -227,29 +227,5 @@ $(document).ready(function() {
     $('#peerDistribution').click(peerDistribution);
 
     $('#reset').click(resetSession);
-
-    $('#helpButton').click(function() {
-        $('#helpModal').css("display", "block");
-    });
-
-    $('#closeModal').click(function() {
-        $('#helpModal').css("display", "none");
-    })
-
-    window.onclick = function(event) {
-        if (event.target == document.getElementById('helpModal')) {
-            $('#helpModal').css("display", "none");
-        }
-    }    
+   
 });
-
-
-function showResults() {
-    $('#resultsContainer').css("display", "block");
-    $('#thresholdsContainer').css("display", "none");
-  }
-  
-function showThresholds() {
-    $('#resultsContainer').css("display", "none");
-    $('#thresholdsContainer').css("display", "block");
-}

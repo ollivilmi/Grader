@@ -7,6 +7,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <script src="scripts.js"></script>
+    <script src="scripts_static.js"></script>
+    <script src="scripts_login.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -20,6 +22,8 @@
     </div>
 
     <div class="navbar">
+      <!-- Rename loginButton -->
+      <button class="button" id="loginButton">My exams</button>
       <button class="button" onclick="showResults()">View results</button>
       <button class="button" onclick="showThresholds()">Adjust thresholds</button>
       <button class="button" id="reset">Reset</button>
@@ -60,49 +64,49 @@
 
           <button id="helpButton" class="btn">Help</button>
 
-          <div id="helpModal" class="modal">
+            <div id="helpModal" class="modal">
 
-            <div class="modal-content">
-              <span id="closeModal">&times;</span>
-              <h1>How to use Grader</h1>
-              <h3>Change configuration</h3>
-              <ul>
-                <li>Choose settings for the Exam to be graded.</li>
-                <li>Minimum grade must be set over 0 as it is used for flunk results.</li>
-                <li>Presets set the Thresholds for the grade and points you have chosen. These may be adjusted by opening the menu "Adjust thresholds".</li>
-              </ul>
-              <h3>Adjust Thresholds</h3>
-              <ul>
-                <li>You may adjust thresholds by point or percentage. Whenever you finish the input, Grader automatically updates.</li>
-                <li>Percentage correlates to the % of the maximum possible points in the exam.</li>
-              </ul>
-              <h3>Add students</h3>
-              <ul>
-                <li>You may add students by pressing the Add button.</li>
-                <li>The ID field must be unique. If you enter an ID that already exists, it overwrites the previous Student with that ID.</li>
-                <li>Name is not required.</li>
-                <li>Grader automatically updates when you set results, and analyzes them.</li>
-              </ul>
-              <h3>View results</h3>
-              <ul>
-                <li>Adjust student points. Automatically updates to corresponding grade.</li>
-                <li>View result statistics.</li>
-              </ul>
-              <h3>Suggested distribution</h3>
-              <ul>
-                <li>In some cases, you may want to set the thresholds based on the results.</li>
-                <li>The suggested distribution analyzes the results and suggests a redistribution. (Grading on a curve) </li>
-                <li>You may use this or update the preset to change thresholds at any time during the use of the application.</li>
-              </ul>
-              <h3>Reset</h3>
-              <ul>
-                <li>Reset clears your current session, and refreshes the page with default configurations.</li>
-                <li>This also removes all the current students.</li>
-              </ul>
+              <div class="modal-content">
+                <h1>How to use Grader</h1>
+                <h3>Change configuration</h3>
+                <ul>
+                  <li>Choose settings for the Exam to be graded.</li>
+                  <li>Minimum grade must be set over 0 as it is used for flunk results.</li>
+                  <li>Presets set the Thresholds for the grade and points you have chosen. These may be adjusted by opening the menu "Adjust thresholds".</li>
+                </ul>
+                <h3>Adjust Thresholds</h3>
+                <ul>
+                  <li>You may adjust thresholds by point or percentage. Whenever you finish the input, Grader automatically updates.</li>
+                  <li>Percentage correlates to the % of the maximum possible points in the exam.</li>
+                </ul>
+                <h3>Add students</h3>
+                <ul>
+                  <li>You may add students by pressing the Add button.</li>
+                  <li>The ID field must be unique. If you enter an ID that already exists, it overwrites the previous Student with that ID.</li>
+                  <li>Name is not required.</li>
+                  <li>Grader automatically updates when you set results, and analyzes them.</li>
+                </ul>
+                <h3>View results</h3>
+                <ul>
+                  <li>Adjust student points. Automatically updates to corresponding grade.</li>
+                  <li>View result statistics.</li>
+                </ul>
+                <h3>Suggested distribution</h3>
+                <ul>
+                  <li>In some cases, you may want to set the thresholds based on the results.</li>
+                  <li>The suggested distribution analyzes the results and suggests a redistribution. (Grading on a curve) </li>
+                  <li>You may use this or update the preset to change thresholds at any time during the use of the application.</li>
+                </ul>
+                <h3>Reset</h3>
+                <ul>
+                  <li>Reset clears your current session, and refreshes the page with default configurations.</li>
+                  <li>This also removes all the current students.</li>
+                </ul>
+              </div>
+
             </div>
 
           </div>
-        </div>
       </div>
 
       <div class="main">
