@@ -43,9 +43,7 @@ public class Authorization implements AuthenticationProvider {
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-        GraderUser user = userRepository.findByUsername(authentication.getName());
-        if (!BCrypt.checkpw(authentication.getCredentials().toString(), user.getPasswordHash()))
-            throw new BadCredentialsException("Authentication failed for " + authentication.getName());
+        GraderUser user = checkAuthentication(authentication);
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority(user.getRole()));
@@ -64,6 +62,15 @@ public class Authorization implements AuthenticationProvider {
         if (userRepository.findByUsername(username) != null || username.isEmpty())
             throw new InvalidNameException();
         return username;
+    }
+
+    private GraderUser checkAuthentication(Authentication authentication)
+    {
+        GraderUser user = userRepository.findByUsername(authentication.getName());
+
+        if (user == null || BCrypt.checkpw(authentication.getCredentials().toString(), user.getPasswordHash()))
+            throw new BadCredentialsException("Authentication failed for " + authentication.getName());
+        return user;
     }
 
 }
