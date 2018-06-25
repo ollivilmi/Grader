@@ -68,7 +68,7 @@ public class Authorization implements AuthenticationProvider {
     {
         GraderUser user = userRepository.findByUsername(authentication.getName());
 
-        if (user == null || BCrypt.checkpw(authentication.getCredentials().toString(), user.getPasswordHash()))
+        if (user == null || !BCrypt.checkpw(authentication.getCredentials().toString(), user.getPasswordHash()))
             throw new BadCredentialsException("Authentication failed for " + authentication.getName());
         return user;
     }
