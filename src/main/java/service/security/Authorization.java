@@ -28,9 +28,7 @@ public class Authorization implements AuthenticationProvider {
     {
         try
         {
-            String username = form.getUsername();
-            if (userRepository.findByUsername(username) != null)
-                throw new InvalidNameException();
+            String username = checkUserName(form.getUsername());
 
             String hash = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
             userRepository.save(new GraderUser(username, hash));
@@ -61,4 +59,11 @@ public class Authorization implements AuthenticationProvider {
     public boolean supports(Class<?> authentication) {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
+
+    private String checkUserName(String username) throws InvalidNameException{
+        if (userRepository.findByUsername(username) != null || username.isEmpty())
+            throw new InvalidNameException();
+        return username;
+    }
+
 }
