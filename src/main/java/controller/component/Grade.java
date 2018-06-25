@@ -29,7 +29,7 @@ public class Grade implements Comparable<Grade> {
         
         amount = gradeList.size();
     }
-    
+
     /***
      * Get the list of possible grades
      * @return 

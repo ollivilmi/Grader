@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import service.entities.GraderUser;
 import service.entities.UserRepository;
 
+import javax.naming.InvalidNameException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,6 +29,9 @@ public class Authorization implements AuthenticationProvider {
         try
         {
             String username = form.getUsername();
+            if (userRepository.findByUsername(username) != null)
+                throw new InvalidNameException();
+
             String hash = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
             userRepository.save(new GraderUser(username, hash));
             return true;

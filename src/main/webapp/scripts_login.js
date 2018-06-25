@@ -1,6 +1,7 @@
 $(document).ready(function() {
 
     $('#registerForm').submit(function(event) {
+    
         event.preventDefault();
         let username = $('#registerForm').find('input[name="username"]').val();
         let password = $('#registerForm').find('input[name="password"]').val();
@@ -12,6 +13,6 @@ $(document).ready(function() {
             contentType:"application/json; charset=utf-8",
             dataType:"json",
             data: registration
-        });
+        }).always(function(data) { console.log(data) });
     });
 });

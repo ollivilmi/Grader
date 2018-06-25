@@ -4,6 +4,7 @@
 
 # IntelliJ
 .idea/
+Grader.iml
 
 # Gradle files
 .gradle/
