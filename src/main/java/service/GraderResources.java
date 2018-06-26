@@ -161,9 +161,8 @@ public class GraderResources {
     
     @PostMapping(path="/register")
     public ResponseEntity register(@RequestBody RegisterForm form){
-        if (auth.register(form))
-            return ResponseEntity.ok(HttpStatus.OK);
-        else return ResponseEntity.ok(HttpStatus.BAD_REQUEST);
+        Pair<Boolean, String> headers = auth.register(form);
+        return new ResponseEntity(headers.getValue(), headers.getKey() ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
     }
 
     @GetMapping(path="/all")
