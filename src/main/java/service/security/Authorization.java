@@ -69,7 +69,7 @@ public class Authorization implements AuthenticationProvider {
 
     private String checkPasswordMatch(RegisterForm form) throws InvalidValue{
         if (!form.getPassword().equals(form.getPasswordConfirmation()))
-            throw new InvalidValue();
+            throw new InvalidValue("Passwords don't match");
         return form.getPassword();
     }
 

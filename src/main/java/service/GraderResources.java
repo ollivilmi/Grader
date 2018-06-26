@@ -1,42 +1,24 @@
 package service;
 
-import controller.model.RegisterForm;
-import service.security.Authorization;
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.List;
+import controller.Grader;
+import controller.component.Student;
+import controller.model.Statistic;
+import controller.model.Threshold;
+import org.apache.commons.math3.util.Pair;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import controller.Grader;
-import controller.model.Statistic;
-import controller.component.Student;
-import controller.model.Threshold;
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import org.apache.commons.math3.util.Pair;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
-import service.entities.GraderUser;
-import service.entities.UserRepository;
+import java.util.List;
 
 @RestController
 public class GraderResources {
-    
-    // Database
-    @Autowired
-    private UserRepository userRepository;
-
-    // Login / Register service
-    @Autowired
-    private Authorization auth;
     
     // Gets the grade thresholds currently in the Grader object
     @RequestMapping("/getThresholds")
@@ -158,15 +140,5 @@ public class GraderResources {
     {
         session.invalidate();
     }
-    
-    @PostMapping(path="/register")
-    public ResponseEntity register(@RequestBody RegisterForm form){
-        Pair<Boolean, String> headers = auth.register(form);
-        return new ResponseEntity(headers.getValue(), headers.getKey() ? HttpStatus.CREATED : HttpStatus.BAD_REQUEST);
-    }
 
-    @GetMapping(path="/all")
-    public @ResponseBody Iterable<GraderUser> getAllUsers() {
-            return userRepository.findAll();
-    }
 }
