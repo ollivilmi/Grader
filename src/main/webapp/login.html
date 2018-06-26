@@ -5,41 +5,38 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="../styles.css">
+        <link rel="stylesheet" href="../styles_login.css">
         <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
         <script src="scripts_login.js"></script>
     </head>
     <body>
         <div class="container">
+            <main>
+                <h1>Log in</h1>
 
-            <div class="navbar">
-                <button class="button" onclick="window.location.href = '/';">Profile</button>
-            </div>
+                <fieldset>
+                    <form action="login" method="post">
+                        <div><label> User Name : <input type="text" name="username"/> </label></div>
+                        <div><label> Password: <input type="password" name="password"/> </label></div>
+                        <div><input type="submit" value="Sign In"/></div>
+                    </form>
+                </fieldset>
 
-            <div class="main">
-            <fieldset>
-                <form action="login" method="post">
-                    <div><label> User Name : <input type="text" name="username"/> </label></div>
-                    <div><label> Password: <input type="password" name="password"/> </label></div>
-                    <div><input type="submit" value="Sign In"/></div>
-                </form>
-            </fieldset>
+                <button id="openRegister">Register</button>
 
-            <br>
+                <fieldset id="registerForm" style="display:none">
+                    <form>
+                        User Name : <input type="text" name="username"/>
+                        Password: <input type="password" name="password"/>
+                        Rewrite password: <input type="password" name="passwordConfirmation"/>
+                        <input type="submit" value="Register"/>
+                        <p id="messageHandler"></p>
+                    </form>
+                </fieldset>
 
-            <fieldset>
-                <form id="registerForm">
-                    User Name : <input type="text" name="username"/>
-                    Password: <input type="password" name="password"/>
-                    Rewrite password: <input type="password" name="passwordConfirmation"/>
-                    <input type="submit" value="Register"/>
-                </form>
-            </fieldset>
+                <button onclick="window.location.href = '/';">Return to main page</button>
 
-            <br>
-
-            <p id="messageHandler"></p>
-
-            </div>
+            </main>
         </div>
     </body>
 </html>

@@ -17,5 +17,13 @@ $(document).ready(function() {
         }).always(function(data) { $('#messageHandler').html(data.responseText); console.log(data); });
     });
 
+    $('#openRegister').click(function() {
+        let register = document.querySelector("#registerForm");
+
+        if (register.style.display == "none")
+            register.style.display = "block";
+        else
+            register.style.display = "none";
+    });
 
 });
