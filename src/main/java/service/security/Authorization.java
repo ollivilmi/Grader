@@ -1,6 +1,7 @@
 package service.security;
 
 import controller.model.RegisterForm;
+import org.apache.commons.math3.util.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -24,7 +25,7 @@ public class Authorization implements AuthenticationProvider {
     @Autowired
     private UserRepository userRepository;
     
-    public boolean register(RegisterForm form)
+    public Pair<Boolean, String> register(RegisterForm form)
     {
         try
         {
@@ -32,11 +33,11 @@ public class Authorization implements AuthenticationProvider {
 
             String hash = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
             userRepository.save(new GraderUser(username, hash));
-            return true;
+            return new Pair(true, "Account created");
         }
         catch (Exception e)
         {
-            return false;
+            return new Pair(false, e.getMessage());
         }
     }
 
@@ -60,7 +61,7 @@ public class Authorization implements AuthenticationProvider {
 
     private String checkUserName(String username) throws InvalidNameException{
         if (userRepository.findByUsername(username) != null || username.isEmpty())
-            throw new InvalidNameException();
+            throw new InvalidNameException("Username already taken");
         return username;
     }
 
