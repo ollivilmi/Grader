@@ -1,6 +1,7 @@
 package service.security;
 
 import controller.model.RegisterForm;
+import org.omg.CORBA.DynAnyPackage.InvalidValue;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -29,8 +30,9 @@ public class Authorization implements AuthenticationProvider {
         try
         {
             String username = checkUserName(form.getUsername());
+            String password = checkPasswordMatch(form);
 
-            String hash = BCrypt.hashpw(form.getPassword(), BCrypt.gensalt());
+            String hash = BCrypt.hashpw(password, BCrypt.gensalt());
             userRepository.save(new GraderUser(username, hash));
             return true;
         }
@@ -62,6 +64,12 @@ public class Authorization implements AuthenticationProvider {
         if (userRepository.findByUsername(username) != null || username.isEmpty())
             throw new InvalidNameException();
         return username;
+    }
+
+    private String checkPasswordMatch(RegisterForm form) throws InvalidValue{
+        if (!form.getPassword().equals(form.getPasswordConfirmation()))
+            throw new InvalidValue();
+        return form.getPassword();
     }
 
     private GraderUser checkAuthentication(Authentication authentication)

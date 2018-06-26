@@ -1,12 +1,22 @@
 package controller.model;
 
 public class RegisterForm {
-    private String username, password;
+    private String username;
+    private String password;
+    private String passwordConfirmation;
     
-    public RegisterForm(String username, String password)
+    public RegisterForm(String username, String password, String passwordConfirmation)
     {
         this.username = username;
         this.password = password;
+        this.passwordConfirmation = passwordConfirmation;
+    }
+    public String getPasswordConfirmation() {
+        return passwordConfirmation;
+    }
+
+    public void setPasswordConfirmation(String passwordConfirmation) {
+        this.passwordConfirmation = passwordConfirmation;
     }
     
     public String getUsername()
