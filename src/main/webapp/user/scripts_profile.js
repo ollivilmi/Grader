@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     $.getJSON("/userApi/getCurrentUserName").always(function(response) {
-    $('#welcomeUser').html(response + "'s profile"); });
+    $('#welcomeUser').html(response["username"] + "'s profile"); });
 
     $('#registerForm').submit(function(event) {
 

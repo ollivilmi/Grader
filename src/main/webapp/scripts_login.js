@@ -1,5 +1,11 @@
 $(document).ready(function() {
 
+    // Check for error parameter from invalid login
+    if (/[?&]error/.test(location.search))
+    {
+        $('#authFailure').html("Authentication failed");
+    };
+
     $('#registerForm').submit(function(event) {
     
         event.preventDefault();
@@ -14,7 +20,7 @@ $(document).ready(function() {
             contentType:"application/json; charset=utf-8",
             dataType:"json",
             data: registration
-        }).always(function(data) { $('#messageHandler').html(data.responseText); console.log(data); });
+        }).always(function(data) { $('#messageHandler').html(data.responseText); });
     });
 
     $('#openRegister').click(function() {

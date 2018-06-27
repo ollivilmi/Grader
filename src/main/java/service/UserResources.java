@@ -1,9 +1,11 @@
 package service;
 
+import com.fasterxml.jackson.databind.util.JSONPObject;
 import controller.model.RegisterForm;
 import org.apache.commons.math3.util.Pair;
 import org.mindrot.jbcrypt.BCrypt;
 import org.omg.CORBA.DynAnyPackage.InvalidValue;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,12 +36,11 @@ public class UserResources {
     }
 
     @GetMapping(path="/getCurrentUserName")
-    public String getCurrentUserName()
+    public String getCurrentUserName(Authentication authentication)
     {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
             String currentUserName = authentication.getName();
-            return currentUserName;
+            return new JSONObject().put("username", currentUserName).toString();
         }
         return null;
     }
