@@ -1,17 +1,14 @@
 package service;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
 import controller.model.RegisterForm;
 import org.apache.commons.math3.util.Pair;
-import org.mindrot.jbcrypt.BCrypt;
-import org.omg.CORBA.DynAnyPackage.InvalidValue;
 import org.json.JSONObject;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import service.entities.GraderUser;
 import service.entities.UserRepository;
@@ -46,19 +43,22 @@ public class UserResources {
     }
 
     @PostMapping(path="/updateUserInformation")
-    private void changeCredentials(Authentication authentication, @RequestBody RegisterForm form){
-        String currentUserName = authentication.getName();
-            GraderUser user = userRepository.findByUsername(currentUserName);
+    public Pair<Boolean, String> changeCredentials(Authentication authentication, @RequestBody RegisterForm form){
+
+        try{
+            GraderUser user = userRepository.findByUsername(authentication.getName());
             user.setUsername(form.getUsername());
-        try {
+            auth.checkUserName(user.getUsername());
+
             String password = auth.checkPasswordMatch(form);
-            String hash = BCrypt.hashpw(password, BCrypt.gensalt());
-            user.setPasswordHash(hash);
-        } catch (Exception e) {
-            e.printStackTrace();
+            user.setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
+
+            userRepository.save(user);
+            return new Pair(true, "Credentials changed!");
         }
-        userRepository.save(user);
-
-
+        catch (Exception e)
+        {
+            return new Pair(false, e.getMessage());
+        }
     }
 }

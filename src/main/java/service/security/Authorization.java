@@ -61,7 +61,7 @@ public class Authorization implements AuthenticationProvider {
         return authentication.equals(UsernamePasswordAuthenticationToken.class);
     }
 
-    private String checkUserName(String username) throws InvalidNameException{
+    public String checkUserName(String username) throws InvalidNameException{
         if (userRepository.findByUsername(username) != null || username.isEmpty())
             throw new InvalidNameException("Username already taken");
         return username;
