@@ -17,6 +17,17 @@
         <main>
             <button onclick="window.location.href = '/';">Main page</button>
             <button onclick="window.location.href = '/logout';">Logout</button>
+            <button id="openChange">Change credentials</button>
+
+            <fieldset id="registerForm" style="display:none">
+                <form>
+                    User Name : <input type="text" name="username"/>
+                    Password: <input type="password" name="password"/>
+                    Rewrite password: <input type="password" name="passwordConfirmation"/>
+                    <input type="submit" value="Change"/>
+                    <p id="messageHandler"></p>
+                </form>
+            </fieldset>
 
         </main>
 
