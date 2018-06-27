@@ -17,7 +17,7 @@ $(document).ready(function() {
                 contentType:"application/json; charset=utf-8",
                 dataType:"json",
                 data: change
-            }).always(function(data) { $('#messageHandler').html(data.responseText); console.log(data); });
+            }).always(function(response) { $('#messageHandler').html(response.responseText); console.log(response); });
         });
 
         $('#openChange').click(function() {

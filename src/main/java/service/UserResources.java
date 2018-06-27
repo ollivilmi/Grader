@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import service.entities.GraderUser;
 import service.entities.UserRepository;
 import service.security.Authorization;
+import service.security.CredentialValidation;
 
 @RestController
 @RequestMapping(value = {"/userApi/"})
@@ -21,6 +22,9 @@ public class UserResources {
     // Login / Register service
     @Autowired
     private Authorization auth;
+
+    @Autowired
+    private CredentialValidation validation;
 
     // Database
     @Autowired
@@ -43,22 +47,8 @@ public class UserResources {
     }
 
     @PostMapping(path="/updateUserInformation")
-    public Pair<Boolean, String> changeCredentials(Authentication authentication, @RequestBody RegisterForm form){
-
-        try{
-            GraderUser user = userRepository.findByUsername(authentication.getName());
-            user.setUsername(form.getUsername());
-            auth.checkUserName(user.getUsername());
-
-            String password = auth.checkPasswordMatch(form);
-            user.setPasswordHash(BCrypt.hashpw(password, BCrypt.gensalt()));
-
-            userRepository.save(user);
-            return new Pair(true, "Credentials changed!");
-        }
-        catch (Exception e)
-        {
-            return new Pair(false, e.getMessage());
-        }
+    public ResponseEntity changeCredentials(Authentication authentication, @RequestBody RegisterForm form){
+        Pair<Boolean, String> headers = validation.modifyUser(authentication, form);
+        return new ResponseEntity(headers.getValue(), headers.getKey() ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 }
